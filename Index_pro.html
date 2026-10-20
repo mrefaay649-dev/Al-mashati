@@ -5,14 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>منصة المشاطي · معلم الكيمياء</title>
 <script>
-/* ============================================================
-   إعدادات Supabase — ضع هنا رابط مشروعك والمفتاح العام
-   اتركهما فارغين للعمل بوضع محلي بحت
-   ============================================================ */
-window.MX_CONFIG = {
-  url: '',   // مثال: https://xxxx.supabase.co
-  key: ''    // مثال: eyJhbGciOi...
-};
+window.MX_CONFIG = { url: '', key: '' };
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -26,10 +19,8 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
   --red-600:#dc2626;--red-500:#ef4444;--red-100:#fee2e2;--red-50:#fef2f2;
   --amber-600:#d97706;--amber-500:#f59e0b;--amber-100:#fef3c7;
   --green-600:#16a34a;--green-500:#22c55e;--green-100:#dcfce7;
-  --blue-500:#3b82f6;--blue-100:#dbeafe;
+  --blue-500:#3b82f6;--blue-100:#dbeafe;--violet-500:#7c3aed;--violet-100:#ede9fe;
 }
-
-/* ===== Login Gate ===== */
 #loginGate{position:fixed;inset:0;background:radial-gradient(1200px 600px at 85% -10%,rgba(45,212,191,.35),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(99,102,241,.25),transparent 60%),linear-gradient(160deg,#042f2e,#0f3d3a 45%,#134e4a);display:flex;align-items:center;justify-content:center;padding:16px;z-index:100}
 .login-card{background:#fff;border-radius:20px;padding:32px 28px;width:100%;max-width:400px;border-top:4px solid var(--teal-500);box-shadow:0 20px 50px -20px rgba(0,0,0,.3);text-align:center}
 .login-logo{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--teal-500),var(--teal-700));display:inline-flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:12px;box-shadow:0 8px 20px -6px rgba(15,118,110,.5)}
@@ -37,7 +28,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
 .login-sub{font-size:13px;color:var(--teal-700);font-weight:700;margin-bottom:24px}
 .login-form{text-align:right;display:flex;flex-direction:column;gap:12px}
 .login-form label{font-size:12.5px;font-weight:800;color:var(--slate-700)}
-.login-form input[type="text"],.login-form input[type="password"]{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--slate-200);background:var(--slate-50);font-family:inherit;font-size:14px;outline:none;transition:.15s}
+.login-form input[type=text],.login-form input[type=password]{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--slate-200);background:var(--slate-50);font-family:inherit;font-size:14px;outline:none;transition:.15s}
 .login-form input:focus{border-color:var(--teal-500);background:#fff}
 .login-remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate-500);font-weight:700;cursor:pointer}
 .login-remember input{width:16px;height:16px;accent-color:var(--teal-600)}
@@ -46,9 +37,6 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
 .login-btn:disabled{opacity:.6;cursor:not-allowed}
 .login-error{color:var(--red-600);font-size:13px;font-weight:700;min-height:20px;text-align:center}
 .login-note{margin-top:16px;padding:10px 12px;background:var(--teal-50);border:1px dashed var(--teal-500);border-radius:10px;font-size:12px;color:var(--teal-800);font-weight:700;line-height:1.7;text-align:right}
-.login-note code{background:rgba(15,118,110,.1);padding:1px 6px;border-radius:4px;font-size:11px;direction:ltr;display:inline-block}
-
-/* ===== App shell ===== */
 #app{display:none;height:100vh;overflow:hidden}
 #app.active{display:flex}
 .sidebar{width:250px;background:var(--slate-900);color:#fff;display:flex;flex-direction:column;flex-shrink:0;transition:transform .3s}
@@ -79,41 +67,221 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
 .save-indicator.saved{background:var(--green-100);color:var(--green-600)}
 .btn-logout{padding:7px 14px;border-radius:99px;font-size:12.5px;font-weight:800;background:#fff;color:var(--slate-500);border:1px solid var(--slate-200);cursor:pointer;font-family:inherit;transition:.2s;display:inline-flex;align-items:center;gap:6px;flex-shrink:0}
 .btn-logout:hover{background:var(--red-50);color:var(--red-600);border-color:#fecaca}
-.content{flex:1;overflow-y:auto;padding:22px}
+.content{flex:1;overflow-y:auto;padding:22px;background:#f1f5f9}
 .page{display:none}
 .page.active{display:block}
 .card{background:#fff;border:1px solid var(--slate-200);border-radius:14px;padding:20px;margin-bottom:16px}
 .card-title{font-size:16px;font-weight:800;margin-bottom:4px}
 .card-sub{font-size:12.5px;color:var(--slate-500);margin-bottom:16px}
-.hero{border-radius:18px;padding:28px;color:#fff;margin-bottom:20px}
-.placeholder{text-align:center;padding:60px 24px;color:var(--slate-400)}
-.placeholder-icon{font-size:56px;margin-bottom:16px;opacity:.6}
-.placeholder h3{font-size:18px;font-weight:800;color:var(--slate-500);margin-bottom:8px}
-.placeholder p{font-size:13.5px;line-height:1.8;max-width:420px;margin:0 auto}
-.phase-badge{display:inline-block;margin-top:16px;padding:4px 12px;border-radius:99px;background:var(--teal-100);color:var(--teal-800);font-size:11.5px;font-weight:800}
-.form-input{width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--slate-200);background:var(--slate-50);outline:none;font-size:14px;font-family:inherit;transition:.15s}
-.form-input:focus{border-color:var(--teal-500);background:#fff}
-.btn-role{padding:10px 16px;border-radius:10px;border:1.5px solid var(--slate-200);background:#fff;font-family:inherit;font-size:13px;font-weight:800;color:var(--slate-500);cursor:pointer;transition:.15s}
-.btn-role:hover{border-color:var(--teal-500);color:var(--teal-700)}
-.btn-role.active{background:var(--teal-600);color:#fff;border-color:var(--teal-600)}
-
-/* ===== Toast ===== */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:9px;border:1px solid transparent;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--teal-600);color:#fff}.btn-primary:hover:not(:disabled){background:var(--teal-700)}
+.btn-ghost{background:#fff;border-color:var(--slate-200);color:var(--slate-700)}.btn-ghost:hover:not(:disabled){background:var(--slate-50)}
+.btn-danger{background:var(--red-50);color:var(--red-600)}.btn-danger:hover:not(:disabled){background:var(--red-100)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.form-input,.form-select{width:100%;padding:9px 12px;border-radius:9px;border:1.5px solid var(--slate-200);background:#fff;font-family:inherit;font-size:13.5px;outline:none;transition:.15s}
+.form-input:focus,.form-select:focus{border-color:var(--teal-500)}
+.form-input.sm{padding:5px 8px;font-size:12px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:12px;font-weight:800;color:var(--slate-700)}
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:800;background:var(--slate-100);color:var(--slate-700)}
+.badge.teal{background:var(--teal-100);color:var(--teal-800)}
+.badge.green{background:var(--green-100);color:var(--green-600)}
+.badge.red{background:var(--red-100);color:var(--red-600)}
+.badge.amber{background:var(--amber-100);color:var(--amber-600)}
+.badge.violet{background:var(--violet-100);color:var(--violet-500)}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.65);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:18px;width:100%;max-width:640px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+.modal.lg{max-width:900px}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--slate-200);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.modal-head h3{font-size:16px;font-weight:800}
+.modal-body{padding:20px;overflow-y:auto}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--slate-200);background:var(--slate-50);display:flex;gap:8px;justify-content:flex-end}
+.close-x{width:32px;height:32px;border-radius:9px;background:var(--slate-100);border:none;cursor:pointer;font-size:16px;color:var(--slate-500);font-weight:800}
 .toast{position:fixed;bottom:22px;left:22px;background:var(--slate-900);color:#fff;padding:13px 22px;border-radius:12px;font-weight:700;font-size:13.5px;z-index:3000;transform:translateY(120px);opacity:0;transition:.3s;max-width:calc(100vw - 44px)}
 .toast.show{transform:translateY(0);opacity:1}
-
-/* ===== Spinner ===== */
 .spinner{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:40px 20px;color:var(--slate-400)}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:.6}
+.empty h4{font-size:15px;font-weight:800;color:var(--slate-500);margin-bottom:6px}
 
-/* ===== Student hint placeholder ===== */
-#studentHint{display:none;position:fixed;inset:0;z-index:50;background:linear-gradient(160deg,#042f2e,#0f3d3a);align-items:center;justify-content:center;padding:24px;color:#fff;text-align:center}
-#studentHint.show{display:flex}
-#studentHint .box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:36px 28px;max-width:420px}
-#studentHint h2{font-size:22px;font-weight:800;margin-bottom:10px}
-#studentHint p{font-size:14px;line-height:1.9;color:#cbd5e1}
-#studentHint code{background:rgba(255,255,255,.1);padding:2px 8px;border-radius:6px;font-size:12px;direction:ltr;display:inline-block}
+/* ===== Hero / Home ===== */
+.hero{background:linear-gradient(120deg,var(--teal-700),var(--teal-500));border-radius:18px;padding:24px;color:#fff;margin-bottom:16px}
+.hero h1{font-size:22px;font-weight:800;margin-bottom:6px}
+.hero p{font-size:13.5px;opacity:.9}
+.today-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.today-card{background:#fff;border:1px solid var(--slate-200);border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:.15s}
+.today-card:hover{border-color:var(--teal-500);transform:translateY(-1px)}
+.today-card.assigned{background:linear-gradient(135deg,var(--teal-50),#fff);border-color:var(--teal-500)}
+.today-num{width:40px;height:40px;border-radius:10px;background:var(--slate-100);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--slate-700);flex-shrink:0}
+.today-card.assigned .today-num{background:var(--teal-600);color:#fff}
+.today-info{flex:1;min-width:0}
+.today-title{font-size:13px;font-weight:800;color:var(--slate-900)}
+.today-sub{font-size:11px;color:var(--slate-500);font-weight:700}
 
-/* ===== Mobile ===== */
+/* ===== Class cards (list) ===== */
+.classes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.class-card{background:#fff;border:1px solid var(--slate-200);border-radius:14px;padding:18px;cursor:pointer;transition:.15s;border-top:4px solid var(--teal-500)}
+.class-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px -12px rgba(15,118,110,.35);border-color:var(--teal-500)}
+.class-card-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.class-letter{width:48px;height:48px;border-radius:12px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;flex-shrink:0}
+.class-card-info{flex:1;min-width:0}
+.class-card-name{font-size:15px;font-weight:800}
+.class-card-sub{font-size:11.5px;color:var(--slate-500);font-weight:700;margin-top:2px}
+.class-card-stats{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+
+/* ===== Unified class screen ===== */
+.class-screen{background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--slate-200)}
+.class-header{background:linear-gradient(120deg,var(--teal-700),var(--teal-500));color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.back-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:8px 14px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s;flex-shrink:0}
+.back-btn:hover{background:rgba(255,255,255,.3)}
+.class-title{flex:1;min-width:150px}
+.class-title h2{font-size:18px;font-weight:800;margin:0}
+.class-title small{font-size:12px;opacity:.9;display:block;margin-top:2px}
+.class-header-actions{display:flex;gap:6px;flex-wrap:wrap}
+.class-header-actions button{background:rgba(255,255,255,.2);border:none;color:#fff;padding:7px 12px;border-radius:9px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:5px}
+.class-header-actions button:hover{background:rgba(255,255,255,.3)}
+.class-tabs{display:flex;gap:2px;overflow-x:auto;background:var(--slate-50);border-bottom:1px solid var(--slate-200);scrollbar-width:thin}
+.class-tab-btn{padding:11px 16px;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:800;color:var(--slate-500);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.15s;display:inline-flex;align-items:center;gap:6px;flex-shrink:0}
+.class-tab-btn:hover{color:var(--teal-700);background:var(--slate-100)}
+.class-tab-btn.active{color:var(--teal-700);border-bottom-color:var(--teal-500);background:#fff}
+.class-content{padding:18px}
+.sub-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.sub-tab{padding:7px 14px;border-radius:9px;border:1.5px solid var(--slate-200);background:#fff;font-family:inherit;font-size:12.5px;font-weight:800;color:var(--slate-500);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:5px}
+.sub-tab:hover{border-color:var(--teal-500)}
+.sub-tab.active{background:var(--teal-600);color:#fff;border-color:var(--teal-600)}
+
+/* ===== Attendance ===== */
+.att-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;background:var(--slate-50);border-radius:11px;margin-bottom:12px}
+.att-toolbar label{font-size:12px;font-weight:800;color:var(--slate-700)}
+.att-toolbar select,.att-toolbar input{padding:7px 10px;border-radius:8px;border:1px solid var(--slate-200);font-family:inherit;font-size:13px;font-weight:700;background:#fff;outline:none}
+.att-summary{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.att-chip{padding:6px 12px;border-radius:9px;font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:5px}
+.att-chip.present{background:var(--green-100);color:var(--green-600)}
+.att-chip.absent{background:var(--red-100);color:var(--red-600)}
+.att-chip.late{background:var(--amber-100);color:var(--amber-600)}
+.att-chip.total{background:var(--slate-100);color:var(--slate-700)}
+.att-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--slate-200);border-radius:11px;margin-bottom:6px;background:#fff;flex-wrap:wrap;transition:.15s}
+.att-row.absent{background:var(--red-50);border-color:#fecaca}
+.att-row.late{background:#fffbeb;border-color:#fde68a}
+.att-row.present{background:#f0fdf4;border-color:#bbf7d0}
+.att-num{width:26px;height:26px;border-radius:7px;background:var(--slate-100);color:var(--slate-500);font-weight:800;font-family:monospace;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.att-name{flex:1;font-weight:800;font-size:13.5px;min-width:130px}
+.att-name small{display:block;font-size:11px;color:var(--slate-500);font-weight:700}
+.att-status-btns{display:flex;gap:4px;flex-wrap:wrap}
+.att-status-btn{padding:6px 10px;border-radius:8px;border:1.5px solid var(--slate-200);background:#fff;font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:3px;color:var(--slate-500)}
+.att-status-btn.on.present{background:var(--green-100);color:var(--green-600);border-color:var(--green-500)}
+.att-status-btn.on.absent{background:var(--red-100);color:var(--red-600);border-color:var(--red-500)}
+.att-status-btn.on.late{background:var(--amber-100);color:var(--amber-600);border-color:var(--amber-500)}
+.att-beh-btns{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.att-beh-btn{padding:5px 10px;border-radius:8px;border:1.5px solid;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:.15s;min-width:36px}
+.att-beh-btn.pos{background:var(--green-100);color:var(--green-600);border-color:var(--green-500)}
+.att-beh-btn.neg{background:var(--red-100);color:var(--red-600);border-color:var(--red-500)}
+.att-beh-total{padding:4px 8px;border-radius:7px;font-family:monospace;font-size:12px;font-weight:800;background:var(--slate-100);color:var(--slate-700);min-width:34px;text-align:center}
+
+/* ===== Grades table ===== */
+.grade-table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--slate-200);font-size:12.5px}
+.grade-table thead th{background:var(--slate-900);color:#fff;padding:10px 8px;font-weight:800;text-align:center;font-size:11.5px;white-space:nowrap}
+.grade-table tbody td{padding:8px 8px;border-bottom:1px solid var(--slate-100);text-align:center;font-weight:700}
+.grade-table tbody tr:hover{background:var(--slate-50)}
+.grade-table td.name-cell{text-align:right;font-weight:800;color:var(--slate-900);min-width:140px}
+.grade-input{width:62px;padding:5px 8px;border-radius:7px;border:1.5px solid var(--slate-200);background:#fff;font-family:inherit;font-size:13px;font-weight:800;text-align:center;outline:none;transition:.15s}
+.grade-input:focus{border-color:var(--teal-500)}
+.grade-input.saved{border-color:var(--green-500);background:var(--green-100)}
+.grade-cell-pct{font-family:monospace;font-size:11px;color:var(--slate-500);display:block;margin-top:2px}
+
+/* ===== Groups ===== */
+.groups-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.group-card{background:#fff;border:2px solid var(--slate-200);border-radius:14px;padding:12px;box-shadow:0 4px 12px -8px rgba(15,23,42,.15)}
+.group-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:8px;padding-bottom:8px;border-bottom:2px dashed var(--slate-200);flex-wrap:wrap}
+.group-name{font-weight:800;font-size:13px}
+.group-name small{display:block;font-size:10px;color:var(--slate-500);font-weight:700;margin-top:2px}
+.group-score{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;background:var(--violet-100);color:var(--violet-500);font-weight:800;font-family:monospace;font-size:12px;border:1.5px solid #c4b5fd;cursor:pointer;font-family:inherit}
+.group-score:hover{background:var(--violet-500);color:#fff}
+.group-stu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.group-stu{padding:8px 4px;border:2px solid var(--slate-200);border-radius:9px;background:var(--slate-50);text-align:center;cursor:pointer;transition:.15s;min-width:0}
+.group-stu:hover{transform:scale(1.03);border-color:var(--teal-500)}
+.group-stu.present{background:var(--green-100);border-color:var(--green-500)}
+.group-stu.absent{background:var(--red-100);border-color:var(--red-500)}
+.group-stu.late{background:var(--amber-100);border-color:var(--amber-500)}
+.group-stu-num{font-size:16px;font-weight:800;font-family:monospace;color:var(--slate-900);line-height:1}
+.group-stu-name{font-size:9.5px;font-weight:800;color:var(--slate-500);margin-top:3px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.2;word-break:break-word}
+
+/* ===== Behavior ===== */
+.beh-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--slate-200);border-radius:11px;margin-bottom:6px;background:#fff;flex-wrap:wrap}
+.beh-name{flex:1;font-weight:800;font-size:13.5px;min-width:130px}
+.beh-total{padding:4px 10px;border-radius:8px;font-family:monospace;font-weight:800;font-size:13px;min-width:50px;text-align:center}
+.beh-total.pos{background:var(--green-100);color:var(--green-600)}
+.beh-total.neg{background:var(--red-100);color:var(--red-600)}
+.beh-total.zero{background:var(--slate-100);color:var(--slate-500)}
+.beh-actions{display:flex;gap:4px}
+.beh-btn{padding:6px 12px;border-radius:8px;border:1.5px solid;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;transition:.15s}
+.beh-btn.pos{background:var(--green-100);color:var(--green-600);border-color:var(--green-500)}
+.beh-btn.pos:hover{background:var(--green-500);color:#fff}
+.beh-btn.neg{background:var(--red-100);color:var(--red-600);border-color:var(--red-500)}
+.beh-btn.neg:hover{background:var(--red-500);color:#fff}
+
+/* ===== Follow-ups ===== */
+.fu-row{background:#fff;border:1px solid var(--slate-200);border-radius:11px;margin-bottom:8px;overflow:hidden}
+.fu-head{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;background:var(--slate-50)}
+.fu-head:hover{background:var(--slate-100)}
+.fu-name{flex:1;font-weight:800;font-size:13.5px}
+.fu-count{padding:2px 8px;border-radius:7px;background:var(--slate-100);font-size:11px;font-weight:800;color:var(--slate-700);font-family:monospace}
+.fu-body{display:none;padding:12px;border-top:1px dashed var(--slate-200)}
+.fu-body.open{display:block}
+.fu-list{margin-bottom:10px}
+.fu-item{background:var(--slate-50);border-right:3px solid var(--amber-500);padding:8px 10px;border-radius:6px;margin-bottom:5px;font-size:12.5px;font-weight:700;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.fu-item small{color:var(--slate-400);font-size:10.5px;font-weight:700;white-space:nowrap;margin-top:2px}
+.fu-input-row{display:flex;gap:6px}
+.fu-input-row input{flex:1}
+
+/* ===== Points / Ranking ===== */
+.rank-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;background:var(--slate-50);border:1px solid var(--slate-200);margin-bottom:6px}
+.rank-row.top1{background:linear-gradient(135deg,#fef3c7,#fde68a);border-color:var(--amber-500)}
+.rank-row.top2{background:linear-gradient(135deg,#f1f5f9,#e2e8f0);border-color:var(--slate-400)}
+.rank-row.top3{background:linear-gradient(135deg,#ffedd5,#fed7aa);border-color:#ea580c}
+.rank-pos{width:30px;height:30px;border-radius:8px;background:#fff;border:2px solid var(--slate-200);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:monospace;font-size:12px;color:var(--slate-500);flex-shrink:0}
+.rank-info{flex:1;min-width:0}
+.rank-name{font-weight:800;font-size:13px}
+.rank-name small{display:block;font-size:10.5px;color:var(--slate-500);font-weight:700;margin-top:2px}
+.rank-bar{height:6px;background:var(--slate-100);border-radius:99px;overflow:hidden;margin-top:4px}
+.rank-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal-500),var(--teal-700))}
+.rank-score{padding:5px 10px;border-radius:8px;background:var(--teal-100);color:var(--teal-800);font-family:monospace;font-weight:800;font-size:13px;min-width:52px;text-align:center}
+
+/* ===== Year Work ===== */
+.yw-table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--slate-200);font-size:12.5px;overflow-x:auto;display:block}
+.yw-table table{width:100%;border-collapse:collapse;min-width:780px}
+.yw-table thead th{background:var(--slate-900);color:#fff;padding:10px 8px;font-weight:800;text-align:center;font-size:11.5px;white-space:nowrap}
+.yw-table tbody td{padding:8px;border-bottom:1px solid var(--slate-100);text-align:center;font-weight:700}
+.yw-table tbody tr:hover{background:var(--slate-50)}
+.yw-table td.name-cell{text-align:right;font-weight:800;color:var(--slate-900);min-width:140px;background:var(--slate-50)}
+.yw-pct{font-family:monospace;font-weight:800}
+.yw-pct.high{color:var(--green-600)}
+.yw-pct.mid{color:var(--amber-600)}
+.yw-pct.low{color:var(--red-600)}
+.yw-total{background:var(--teal-50) !important;font-size:14px !important}
+.yw-grade{padding:2px 8px;border-radius:7px;font-size:10.5px;font-weight:800;display:inline-block}
+
+/* ===== Students management ===== */
+.students-table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--slate-200);font-size:12.5px}
+.students-table thead th{background:var(--slate-900);color:#fff;padding:10px 8px;font-weight:800;text-align:center;font-size:11.5px}
+.students-table tbody td{padding:9px 8px;border-bottom:1px solid var(--slate-100);text-align:center;font-weight:700}
+.students-table td.name-cell{text-align:right;font-weight:800;color:var(--slate-900);min-width:130px}
+.students-table td.actions{white-space:nowrap}
+.students-table .mini-btn{padding:4px 8px;border-radius:6px;border:1px solid var(--slate-200);background:#fff;font-family:inherit;font-size:12px;cursor:pointer;margin:0 1px}
+.students-table .mini-btn:hover{background:var(--slate-100)}
+.students-table .mini-btn.danger:hover{background:var(--red-100);color:var(--red-600)}
+
+/* ===== Whiteboard ===== */
+.wb-modal{max-width:900px}
+.wb-toolbar{display:flex;gap:6px;flex-wrap:wrap;padding:10px;background:var(--slate-50);border-radius:10px;margin-bottom:8px;align-items:center}
+.wb-color{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:.15s}
+.wb-color.active{border-color:var(--slate-900);transform:scale(1.1)}
+#wbCanvas{width:100%;height:420px;background:#fff;border:2px solid var(--slate-200);border-radius:10px;touch-action:none;display:block}
+
+/* ===== Responsive ===== */
 @media (max-width:900px){
   .sidebar{position:fixed;right:0;top:0;bottom:0;transform:translateX(100%);z-index:500;width:260px}
   .sidebar.open{transform:translateX(0);box-shadow:-8px 0 30px rgba(0,0,0,.25)}
@@ -128,12 +296,25 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
   .save-indicator{padding:6px 10px;font-size:11px}
   .save-text-long{display:none}
   .save-text-short{display:inline!important}
+  .class-tab-btn{padding:9px 12px;font-size:12px}
+  .class-content{padding:12px}
+  .class-header-actions{width:100%}
+  .class-header-actions button{flex:1;justify-content:center}
+  .group-stu-grid{grid-template-columns:repeat(2,1fr)}
+  .grade-table{font-size:11.5px}
+  .grade-table thead th,.grade-table tbody td{padding:6px 4px}
+  .grade-input{width:52px;padding:4px 6px;font-size:12px}
+  .att-name{min-width:100px;font-size:12.5px}
+  .att-beh-btn{padding:4px 8px;font-size:12px;min-width:30px}
+  #wbCanvas{height:300px}
 }
 @media (max-width:480px){
   .login-card{padding:24px 20px}
   .login-title{font-size:20px}
   .login-logo{width:60px;height:60px;font-size:30px}
   .header-title{font-size:14px}
+  .classes-grid{grid-template-columns:1fr}
+  .class-title h2{font-size:16px}
 }
 </style>
 </head>
@@ -150,9 +331,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
       <input id="lgEmail" type="text" dir="ltr" autocomplete="username" placeholder="teacher@example.com">
       <label for="lgPassword">كلمة المرور</label>
       <input id="lgPassword" type="password" dir="ltr" autocomplete="current-password" placeholder="••••••••">
-      <label class="login-remember">
-        <input type="checkbox" id="lgRemember"> تذكرني على هذا الجهاز لمدة 30 يوماً
-      </label>
+      <label class="login-remember"><input type="checkbox" id="lgRemember"> تذكرني على هذا الجهاز لمدة 30 يوماً</label>
       <button class="login-btn" id="loginBtn" type="submit">دخول</button>
       <div class="login-error" id="loginError"></div>
     </form>
@@ -160,26 +339,19 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
   </div>
 </div>
 
-<!-- ========== STUDENT HINT (placeholder for Phase 5) ========== -->
-<div id="studentHint">
-  <div class="box">
+<!-- ========== STUDENT HINT ========== -->
+<div id="studentHint" style="display:none;position:fixed;inset:0;z-index:50;background:linear-gradient(160deg,#042f2e,#0f3d3a);align-items:center;justify-content:center;padding:24px;color:#fff;text-align:center">
+  <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:36px 28px;max-width:420px">
     <div style="font-size:52px;margin-bottom:12px">🎓</div>
-    <h2>واجهة الطالب</h2>
-    <p>ستُبنى واجهة الطالب (الاختبارات الإلكترونية، الرسائل، وإشعارات الدرجات) في المرحلة الخامسة.</p>
-    <p style="margin-top:14px;font-size:12px;color:#94a3b8">تُفتح عبر <code>?chat=1</code> أو <code>?mx=</code></p>
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:10px">واجهة الطالب</h2>
+    <p style="font-size:14px;line-height:1.9;color:#cbd5e1">ستُبنى في المرحلة الخامسة.</p>
   </div>
 </div>
 
 <!-- ========== MAIN APP ========== -->
 <div id="app">
   <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="brand-icon">🎓</div>
-      <div>
-        <div class="brand-name">منصة المشاطي</div>
-        <div class="brand-sub">معلم الكيمياء</div>
-      </div>
-    </div>
+    <div class="brand"><div class="brand-icon">🎓</div><div><div class="brand-name">منصة المشاطي</div><div class="brand-sub">معلم الكيمياء</div></div></div>
     <nav class="nav">
       <button class="nav-btn active" data-page="home">🏠 الرئيسية</button>
       <button class="nav-btn" data-page="classes">👥 الفصول والطلاب</button>
@@ -192,142 +364,78 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
     </nav>
     <div class="sidebar-foot">
       <div class="sidebar-avatar" id="sideAvatar">ع</div>
-      <div style="min-width:0;flex:1">
-        <div class="sidebar-name" id="sideName">أ. عبدالله الفيفي</div>
-        <div class="sidebar-role" id="sideRole">مدير النظام</div>
-      </div>
+      <div style="min-width:0;flex:1"><div class="sidebar-name" id="sideName">أ. عبدالله الفيفي</div><div class="sidebar-role" id="sideRole">مدير النظام</div></div>
     </div>
   </aside>
-
   <main class="main">
     <header class="header">
       <button class="hamburger" id="hamburger" aria-label="القائمة">☰</button>
       <div class="header-icon">⚗️</div>
-      <div class="header-info">
-        <div class="header-title" id="pageTitle">الرئيسية</div>
-        <div class="header-sub" id="pageSub">لوحة التحكم</div>
-      </div>
+      <div class="header-info"><div class="header-title" id="pageTitle">الرئيسية</div><div class="header-sub" id="pageSub">لوحة التحكم</div></div>
       <span class="role-chip" id="roleChip">🛡️ مدير النظام</span>
-      <div class="save-indicator" id="saveIndicator">
-        <span class="save-text-long">الحفظ التلقائي مُفعّل</span>
-        <span class="save-text-short" style="display:none">تلقائي</span>
-      </div>
+      <div class="save-indicator" id="saveIndicator"><span class="save-text-long">الحفظ التلقائي مُفعّل</span><span class="save-text-short" style="display:none">تلقائي</span></div>
       <button class="btn-logout" id="logoutBtn" title="تسجيل الخروج">🚪<span>خروج</span></button>
     </header>
-
     <div class="content">
       <!-- HOME -->
       <div class="page active" id="page-home">
-        <div class="hero" style="background:linear-gradient(120deg,#0f766e,#14b8a6)">
-          <div style="font-size:22px;font-weight:800;margin-bottom:8px">أهلاً، <span id="heroName">أ. عبدالله الفيفي</span> 👋</div>
-          <div style="opacity:.9;font-size:14px">منصة إدارة معلم الكيمياء · <span id="heroToday">—</span></div>
+        <div class="hero">
+          <h1>أهلاً، <span id="heroName">أ. عبدالله الفيفي</span> 👋</h1>
+          <p id="heroToday">—</p>
         </div>
         <div class="card">
           <div class="card-title">📅 مسار اليوم</div>
-          <div class="card-sub" id="heroTodaySub">—</div>
-          <div class="placeholder" style="padding:30px 20px">
-            <div class="placeholder-icon">🚧</div>
-            <h3>مسار اليوم قيد الإنشاء</h3>
-            <p>سيُبنى مسار اليوم (الحصص، أوقاتها، والانتقال السريع للحضور والدرس) في المرحلة الثانية.</p>
-            <span class="phase-badge">المرحلة 2</span>
-          </div>
+          <div class="card-sub">اضغط على أي حصة لفتح الفصل المسند إليها أو لتعيين فصل.</div>
+          <div class="today-grid" id="todayGrid"></div>
         </div>
         <div class="card">
           <div class="card-title">آخر الأنشطة</div>
-          <div id="homeActivity" class="placeholder" style="padding:20px"><p>لا توجد أنشطة بعد</p></div>
+          <div id="homeActivity"><div class="empty"><p>لا توجد أنشطة بعد</p></div></div>
         </div>
       </div>
 
       <!-- CLASSES -->
       <div class="page" id="page-classes">
-        <div class="placeholder">
-          <div class="placeholder-icon">👥</div>
-          <h3>الفصول والطلاب</h3>
-          <p>ستُبنى قائمة الفصول والشاشة الموحّدة للفصل (الحضور، المجموعات، الواجبات، الاختبارات، السلوك، المتابعات، الكتاب، قياس، أنماط التعلم، المتأخرون، الفاقد، السبورة، النقاط، الترتيب، أعمال السنة، إدارة الطلاب) في المرحلة الثانية.</p>
-          <span class="phase-badge">المرحلة 2</span>
-        </div>
+        <div id="classesView"></div>
+        <div id="classDetail" style="display:none"></div>
       </div>
 
-      <!-- EDUCATION -->
+      <!-- EDUCATION / LAB / PORTFOLIO / REPORTS / MESSAGES: placeholders -->
       <div class="page" id="page-education">
-        <div class="placeholder">
-          <div class="placeholder-icon">📖</div>
-          <h3>المنهج</h3>
-          <p>ستُبنى الدروس الـ13 المستقلة، المعالجة الذكية للمنهج، بنك الأسئلة، منشئ الدروس حسب «العقد»، والاختبارات الإلكترونية في المرحلة الثالثة.</p>
-          <span class="phase-badge">المرحلة 3</span>
-        </div>
+        <div class="card"><div class="card-title">📖 المنهج</div><div class="card-sub">13 درساً مستقلاً، بنك الأسئلة، والاختبارات الإلكترونية — المرحلة 3.</div><div class="empty"><div class="empty-icon">📖</div><h4>قيد الإنشاء</h4></div></div>
       </div>
-
-      <!-- LAB -->
       <div class="page" id="page-lab">
-        <div class="placeholder">
-          <div class="placeholder-icon">🧪</div>
-          <h3>مختبري</h3>
-          <p>ستُبنى الخطط الفصلية، التجارب والمعدات، لوحة الإحصاءات، سجل التدقيق، تلميحات الرموز (فأرة ولمس)، ولوحة محضّر المختبر في المرحلة الرابعة.</p>
-          <span class="phase-badge">المرحلة 4</span>
-        </div>
+        <div class="card"><div class="card-title">🧪 مختبري</div><div class="card-sub">الخطط الفصلية، التجارب والمعدات، سجل التدقيق — المرحلة 4.</div><div class="empty"><div class="empty-icon">🧪</div><h4>قيد الإنشاء</h4></div></div>
       </div>
-
-      <!-- PORTFOLIO -->
       <div class="page" id="page-portfolio">
-        <div class="placeholder">
-          <div class="placeholder-icon">🏅</div>
-          <h3>ملف الإنجاز</h3>
-          <p>ستُبنى الشهادات، السيرة الذاتية، وشواهد الأداء الوظيفي (11 معياراً) في المرحلة الرابعة.</p>
-          <span class="phase-badge">المرحلة 4</span>
-        </div>
+        <div class="card"><div class="card-title">🏅 ملف الإنجاز</div><div class="card-sub">الشهادات والسيرة الذاتية وشواهد الأداء — المرحلة 4.</div><div class="empty"><div class="empty-icon">🏅</div><h4>قيد الإنشاء</h4></div></div>
       </div>
-
-      <!-- REPORTS -->
       <div class="page" id="page-reports">
-        <div class="placeholder">
-          <div class="placeholder-icon">📊</div>
-          <h3>التقارير</h3>
-          <p>ستُبنى التقارير العامة وتقارير أولياء الأمور (إرسال واتساب وطباعة آمنة) في المرحلة الرابعة.</p>
-          <span class="phase-badge">المرحلة 4</span>
-        </div>
+        <div class="card"><div class="card-title">📊 التقارير</div><div class="card-sub">تقارير عامة وتقارير أولياء الأمور — المرحلة 4.</div><div class="empty"><div class="empty-icon">📊</div><h4>قيد الإنشاء</h4></div></div>
       </div>
-
-      <!-- MESSAGES -->
       <div class="page" id="page-messages">
-        <div class="placeholder">
-          <div class="placeholder-icon">💬</div>
-          <h3>الرسائل</h3>
-          <p>ستُبنى الدردشة الداخلية بين المعلم والطلاب، الإرسال للمجموعة أو لطالب أو للجميع، وإشعارات الدرجات في المرحلة الخامسة.</p>
-          <span class="phase-badge">المرحلة 5</span>
-        </div>
+        <div class="card"><div class="card-title">💬 الرسائل</div><div class="card-sub">دردشة مع الطلاب والمجموعات — المرحلة 5.</div><div class="empty"><div class="empty-icon">💬</div><h4>قيد الإنشاء</h4></div></div>
       </div>
-
-      <!-- SETTINGS -->
       <div class="page" id="page-settings">
         <div class="card">
           <div class="card-title">⚙️ الإعدادات</div>
-          <div class="card-sub">تبويبات المرحلة السادسة: الحساب، الفصول، الطلبة، الجدول، المنهج، الإتقان، إعدادات مختبري، الرسائل، الحسابات والصلاحيات، فحص حالة النظام، النسخ الاحتياطي.</div>
+          <div class="card-sub">تبويبات المرحلة السادسة قيد الإنشاء.</div>
         </div>
         <div class="card">
           <div class="card-title">بيانات المعلم</div>
           <form id="profileForm" style="display:grid;gap:12px;margin-top:12px">
-            <div>
-              <label style="font-size:12.5px;font-weight:800;color:var(--slate-700);display:block;margin-bottom:6px">الاسم</label>
-              <input name="teacherName" class="form-input">
-            </div>
-            <div>
-              <label style="font-size:12.5px;font-weight:800;color:var(--slate-700);display:block;margin-bottom:6px">البريد</label>
-              <input name="email" class="form-input" dir="ltr">
-            </div>
-            <div>
-              <label style="font-size:12.5px;font-weight:800;color:var(--slate-700);display:block;margin-bottom:6px">المدرسة</label>
-              <input name="school" class="form-input">
-            </div>
+            <div class="field"><label>الاسم</label><input name="teacherName" class="form-input"></div>
+            <div class="field"><label>البريد</label><input name="email" class="form-input" dir="ltr"></div>
+            <div class="field"><label>المدرسة</label><input name="school" class="form-input"></div>
           </form>
         </div>
         <div class="card">
-          <div class="card-title">الدور الحالي على هذا الجهاز</div>
-          <div class="card-sub">يتغيّر عبر تسجيل الخروج ثم الدخول بحساب آخر. للاختبار في المرحلة الأولى يمكنك التبديل يدوياً:</div>
+          <div class="card-title">الدور الحالي</div>
+          <div class="card-sub">للاختبار في المرحلة الحالية.</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-            <button class="btn-role" data-role="admin">🛡️ مدير النظام</button>
-            <button class="btn-role" data-role="viewer">👁️ مشاهد شامل</button>
-            <button class="btn-role" data-role="lab_keeper">🧪 محضّر مختبر</button>
+            <button class="btn btn-ghost" data-role="admin">🛡️ مدير النظام</button>
+            <button class="btn btn-ghost" data-role="viewer">👁️ مشاهد شامل</button>
+            <button class="btn btn-ghost" data-role="lab_keeper">🧪 محضّر مختبر</button>
           </div>
         </div>
       </div>
@@ -335,135 +443,101 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
   </main>
 </div>
 
+<div class="overlay" id="overlay"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ==========================================================================
-   منصة المشاطي — المرحلة 1: البنية، الدخول، الأدوار، والتخزين
-   ========================================================================== */
 (function () {
   'use strict';
 
-  /* ---------------- Constants ---------------- */
-  const STORAGE_KEY   = 'mashati_v1';
-  const SESSION_KEY   = 'mashati_auth';
-  const REMEMBER_KEY  = 'mashati_auth_t';
-  const ROLE_KEY      = 'mashati_role';
-  const PW_KEY        = 'mashati_tpw';
-  const SESSION_LIFE  = 30 * 86400000;
-  const APP_VERSION   = '1.0.0-phase1';
+  /* ========== Constants ========== */
+  const STORAGE_KEY = 'mashati_v1';
+  const SESSION_KEY = 'mashati_auth';
+  const REMEMBER_KEY = 'mashati_auth_t';
+  const ROLE_KEY = 'mashati_role';
+  const PW_KEY = 'mashati_tpw';
+  const SESSION_LIFE = 30 * 86400000;
 
   const ROLES = {
-    admin:      { label: 'مدير النظام', icon: '🛡️', chip: '' },
-    viewer:     { label: 'مشاهد شامل', icon: '👁️', chip: 'viewer' },
+    admin: { label: 'مدير النظام', icon: '🛡️', chip: '' },
+    viewer: { label: 'مشاهد شامل', icon: '👁️', chip: 'viewer' },
     lab_keeper: { label: 'محضّر مختبر', icon: '🧪', chip: 'lab_keeper' }
   };
-
   const PAGES = {
-    home:      { title: 'الرئيسية',       sub: 'لوحة التحكم' },
-    classes:   { title: 'الفصول والطلاب', sub: 'إدارة الفصول والطلاب' },
-    education: { title: 'المنهج',         sub: 'دروس الكيمياء 3 والعرض البصري' },
-    lab:       { title: 'مختبري',         sub: 'الخطط الفصلية والتجارب' },
-    portfolio: { title: 'ملف الإنجاز',   sub: 'الشهادات والسيرة الذاتية' },
-    reports:   { title: 'التقارير',       sub: 'تقارير شاملة وأولياء الأمور' },
-    messages:  { title: 'الرسائل',       sub: 'المراسلة مع الطلاب والمجموعات' },
-    settings:  { title: 'الإعدادات',     sub: 'إعدادات المنصة' }
+    home: { title: 'الرئيسية', sub: 'لوحة التحكم' },
+    classes: { title: 'الفصول والطلاب', sub: 'إدارة الفصول والطلاب' },
+    education: { title: 'المنهج', sub: 'دروس الكيمياء 3' },
+    lab: { title: 'مختبري', sub: 'الخطط الفصلية' },
+    portfolio: { title: 'ملف الإنجاز', sub: 'الشهادات والسيرة' },
+    reports: { title: 'التقارير', sub: 'شاملة وأولياء الأمور' },
+    messages: { title: 'الرسائل', sub: 'المراسلة' },
+    settings: { title: 'الإعدادات', sub: 'إعدادات المنصة' }
   };
+  const CLASS_COLORS = {
+    'أ': { bg: '#0d9488', light: '#ccfbf1', text: '#0f766e' },
+    'ب': { bg: '#2563eb', light: '#dbeafe', text: '#1e40af' },
+    'ج': { bg: '#7c3aed', light: '#ede9fe', text: '#5b21b6' },
+    'د': { bg: '#ea580c', light: '#ffedd5', text: '#9a3412' },
+    'ه': { bg: '#db2777', light: '#fce7f3', text: '#9d174d' }
+  };
+  const SEC_LETTERS = ['أ', 'ب', 'ج', 'د', 'ه'];
+  const SEC_EN = { 'أ': 'A', 'ب': 'B', 'ج': 'C', 'د': 'D', 'ه': 'E' };
+  const CURR_KEY = 'g12_s1';
+  const CURR_LABEL = 'كيمياء 3';
+  const TAB_LIST = [
+    { k: 'attendance', l: '📋 الحضور' },
+    { k: 'grades', l: '📊 الدرجات' },
+    { k: 'behavior', l: '🎭 السلوك' },
+    { k: 'followup', l: '📌 المتابعة' },
+    { k: 'curriculum', l: '📖 المنهج' },
+    { k: 'points', l: '⭐ النقاط' },
+    { k: 'yearwork', l: '🏅 أعمال السنة' },
+    { k: 'students', l: '👥 الطلاب' }
+  ];
 
   const $ = id => document.getElementById(id);
-  const $$ = sel => document.querySelectorAll(sel);
+  const $$ = s => document.querySelectorAll(s);
 
-  /* ---------------- Utilities ---------------- */
+  /* ========== Utils ========== */
   function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
-      { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
-    ));
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  function fmtDay(ts) { try { return new Date(ts).toLocaleDateString('ar-SA-u-nu-latn-ca-gregory', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); } catch (e) { return '—'; } }
+  function todayKey() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 
-  function fmtDay(ts) {
-    try {
-      return new Date(ts).toLocaleDateString('ar-SA-u-nu-latn-ca-gregory', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-      });
-    } catch (e) { return '—'; }
-  }
-  function fmtTime(ts) {
-    try {
-      return new Date(ts).toLocaleTimeString('ar-SA-u-nu-latn', { hour: 'numeric', minute: '2-digit' });
-    } catch (e) { return '—'; }
-  }
-
-  /* ---------------- Toast ---------------- */
   let toastTimer = null;
-  function toast(msg, ms) {
-    const t = $('toast');
-    if (!t) return;
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), ms || 2600);
-  }
+  function toast(msg, ms) { const t = $('toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms || 2600); }
 
-  /* ---------------- Crypto ---------------- */
   async function sha256(text) {
     const s = String(text);
     if (!(window.crypto && crypto.subtle)) {
-      // Fallback for file:// — not cryptographic, but stable
-      let h = 5381;
-      for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+      let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
       return 'fallback:' + Math.abs(h).toString(16);
     }
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
     return Array.from(new Uint8Array(buf)).map(x => ('0' + x.toString(16)).slice(-2)).join('');
   }
+  function randomSalt() { if (window.crypto && crypto.getRandomValues) { const a = new Uint8Array(16); crypto.getRandomValues(a); return Array.from(a).map(x => ('0' + x.toString(16)).slice(-2)).join(''); } return Math.random().toString(36).slice(2); }
 
-  function randomSalt() {
-    if (window.crypto && crypto.getRandomValues) {
-      const a = new Uint8Array(16);
-      crypto.getRandomValues(a);
-      return Array.from(a).map(x => ('0' + x.toString(16)).slice(-2)).join('');
-    }
-    return Math.random().toString(36).slice(2) + Date.now().toString(36);
-  }
-
-  /* ---------------- State ---------------- */
+  /* ========== State ========== */
   function defaultState() {
     return {
-      __version: APP_VERSION,
-      __createdAt: Date.now(),
-      __updatedAt: Date.now(),
-      profile: {
-        teacherName: 'عبدالله الفيفي',
-        email: '',
-        school: '',
-        subject: 'كيمياء 3'
-      },
-      settings: {
-        masteryThreshold: 85,
-        sessionQuestions: 10,
-        lessonMinutes: 45,
-        periodStarts: ['07:00','07:50','08:40','09:30','10:20','11:10','12:00']
-      },
-      classes: {},
-      sections: { g12_s1: ['أ','ب','ج','د','ه'] },
-      curriculum: {},
-      attendance: {},
-      studentGrades: {},
-      homework: {},
-      exams: {},
-      behavior: {},
-      followUps: {},
-      labPlans: {},
-      labEquipment: [],
-      labAudit: [],
+      __version: '2.0.0-phase2', __createdAt: Date.now(), __updatedAt: Date.now(),
+      profile: { teacherName: 'عبدالله الفيفي', email: '', school: '', subject: 'كيمياء 3' },
+      settings: { masteryThreshold: 85, sessionQuestions: 10, lessonMinutes: 45, periodStarts: ['07:00','07:50','08:40','09:30','10:20','11:10','12:00'] },
+      classes: {}, sections: { g12_s1: SEC_LETTERS.slice() },
+      curriculum: {}, attendance: {}, studentGrades: {}, homework: {}, exams: {},
+      finalExams: {}, behavior: {}, followUps: {}, lessonProgress: {}, qiyas: {}, learningStyles: {},
+      learningLoss: {}, whiteboard: {},
+      labPlans: {}, labEquipment: [], labAudit: [],
       portfolio: { certificates: [], cv: {}, evidence: [] },
       messages: { threads: [], broadcasts: [], readState: {} },
+      schedule: {},
       activity: [],
-      __meta: { phase: 1 }
+      __meta: { phase: 2 }
     };
   }
-
   let state = null;
   let saveTimer = null;
   let dirty = false;
@@ -472,492 +546,503 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return defaultState();
-      const parsed = JSON.parse(raw);
-      return Object.assign(defaultState(), parsed);
-    } catch (e) {
-      console.warn('State load failed, using defaults:', e);
-      return defaultState();
-    }
+      const p = JSON.parse(raw);
+      return Object.assign(defaultState(), p);
+    } catch (e) { console.warn('state load', e); return defaultState(); }
   }
-
   function persistState() {
-    try {
-      state.__updatedAt = Date.now();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      return true;
-    } catch (e) {
-      console.error('State save failed:', e);
-      toast('⚠️ تعذّر الحفظ المحلي — المساحة قد تكون ممتلئة');
-      return false;
-    }
+    try { state.__updatedAt = Date.now(); localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); return true; }
+    catch (e) { console.error('save fail', e); toast('⚠️ تعذّر الحفظ — المساحة ممتلئة'); return false; }
   }
-
   function save() {
     dirty = true;
     const ind = $('saveIndicator');
-    if (ind) {
-      ind.classList.remove('saved');
-      ind.classList.add('saving');
-      ind.innerHTML = '<span class="save-text-long">جارٍ الحفظ...</span><span class="save-text-short">...</span>';
-    }
+    if (ind) { ind.classList.remove('saved'); ind.classList.add('saving'); ind.innerHTML = '<span class="save-text-long">جارٍ الحفظ...</span><span class="save-text-short">...</span>'; }
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
       if (persistState()) {
         dirty = false;
         if (ind) {
-          ind.classList.remove('saving');
-          ind.classList.add('saved');
+          ind.classList.remove('saving'); ind.classList.add('saved');
           ind.innerHTML = '<span class="save-text-long">✓ تم الحفظ</span><span class="save-text-short">✓</span>';
-          setTimeout(() => {
-            if (!dirty && ind) {
-              ind.classList.remove('saved');
-              ind.innerHTML = '<span class="save-text-long">الحفظ التلقائي مُفعّل</span><span class="save-text-short">تلقائي</span>';
-            }
-          }, 1800);
+          setTimeout(() => { if (!dirty && ind) { ind.classList.remove('saved'); ind.innerHTML = '<span class="save-text-long">الحفظ التلقائي مُفعّل</span><span class="save-text-short">تلقائي</span>'; } }, 1500);
         }
       }
     }, 300);
   }
-
-  function flushSave() {
-    if (saveTimer) {
-      clearTimeout(saveTimer);
-      saveTimer = null;
-      if (dirty) persistState();
-    }
-  }
+  function flushSave() { if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; if (dirty) persistState(); } }
   window.addEventListener('pagehide', flushSave);
   window.addEventListener('beforeunload', flushSave);
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') flushSave();
-  });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushSave(); });
 
   function logActivity(text) {
     if (!state.activity) state.activity = [];
     state.activity.unshift({ id: uid(), text, ts: Date.now() });
-    if (state.activity.length > 50) state.activity.length = 50;
+    if (state.activity.length > 30) state.activity.length = 30;
     save();
     renderActivity();
   }
 
-  function renderActivity() {
-    const box = $('homeActivity');
-    if (!box) return;
-    const list = (state && state.activity) || [];
-    if (!list.length) {
-      box.className = 'placeholder';
-      box.style.padding = '20px';
-      box.innerHTML = '<p>لا توجد أنشطة بعد</p>';
-      return;
-    }
-    box.className = '';
-    box.style.padding = '0';
-    box.innerHTML = list.slice(0, 10).map(a => (
-      '<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--slate-200);align-items:center">'
-      + '<div style="width:32px;height:32px;border-radius:8px;background:var(--teal-100);color:var(--teal-700);display:flex;align-items:center;justify-content:center;font-weight:800">✓</div>'
-      + '<div style="flex:1;font-size:13px;font-weight:700">' + esc(a.text) + '</div>'
-      + '<div style="font-size:11px;color:var(--slate-400);white-space:nowrap">' + fmtTime(a.ts) + '</div>'
-      + '</div>'
-    )).join('');
-  }
-
-  /* ---------------- Roles ---------------- */
-  function getRole() {
-    try {
-      const r = localStorage.getItem(ROLE_KEY);
-      return ROLES[r] ? r : 'admin';
-    } catch (e) { return 'admin'; }
-  }
-
-  function setRole(role) {
-    if (!ROLES[role]) return;
-    try { localStorage.setItem(ROLE_KEY, role); } catch (e) {}
-    updateRoleUI();
-    toast('👤 الدور الحالي: ' + ROLES[role].label);
-    logActivity('تبديل الدور إلى ' + ROLES[role].label);
-    // If current page is not accessible, go home
-    if (role === 'lab_keeper' && state && state.__currentPage
-        && state.__currentPage !== 'lab' && state.__currentPage !== 'home') {
-      navigate('home');
-    }
-  }
-
-  function can(action, section) {
-    const role = getRole();
-    if (role === 'admin') return true;
-    if (role === 'viewer') return ['view','print','report','export'].includes(action);
-    if (role === 'lab_keeper') {
-      if (action === 'view' || action === 'print') return section === 'lab' || section === 'home';
-      return section === 'lab';
-    }
-    return false;
-  }
-
-  function updateRoleUI() {
-    const role = getRole();
-    const info = ROLES[role];
-    const chip = $('roleChip');
-    if (chip) {
-      chip.textContent = info.icon + ' ' + info.label;
-      chip.className = 'role-chip ' + (info.chip || '');
-    }
-    const sideRole = $('sideRole');
-    if (sideRole) sideRole.textContent = info.label;
-
-    $$('.nav-btn').forEach(btn => {
-      const p = btn.getAttribute('data-page');
-      btn.style.display = (role === 'lab_keeper' && p !== 'lab' && p !== 'home') ? 'none' : '';
-    });
-    $$('.btn-role').forEach(b => {
-      b.classList.toggle('active', b.getAttribute('data-role') === role);
-    });
-  }
-
-  /* ---------------- Auth ---------------- */
+  /* ========== Auth ========== */
   function isSessionValid() {
-    try {
-      if (sessionStorage.getItem(SESSION_KEY) === 't') return true;
-      const exp = parseInt(localStorage.getItem(REMEMBER_KEY) || '0', 10);
-      return exp > Date.now();
-    } catch (e) { return false; }
+    try { if (sessionStorage.getItem(SESSION_KEY) === 't') return true; const exp = parseInt(localStorage.getItem(REMEMBER_KEY) || '0', 10); return exp > Date.now(); }
+    catch (e) { return false; }
   }
-
   function markAuthenticated(remember) {
-    try {
-      sessionStorage.setItem(SESSION_KEY, 't');
-      if (remember) localStorage.setItem(REMEMBER_KEY, String(Date.now() + SESSION_LIFE));
-      else localStorage.removeItem(REMEMBER_KEY);
-    } catch (e) {}
+    try { sessionStorage.setItem(SESSION_KEY, 't'); if (remember) localStorage.setItem(REMEMBER_KEY, String(Date.now() + SESSION_LIFE)); else localStorage.removeItem(REMEMBER_KEY); } catch (e) {}
   }
-
-  function clearAuth() {
-    try {
-      sessionStorage.removeItem(SESSION_KEY);
-      localStorage.removeItem(REMEMBER_KEY);
-    } catch (e) {}
-  }
-
-  function hasDevicePassword() {
-    try {
-      const raw = localStorage.getItem(PW_KEY);
-      return !!(raw && JSON.parse(raw).hash);
-    } catch (e) { return false; }
-  }
-
-  async function setDevicePassword(pw) {
-    const salt = randomSalt();
-    const hash = await sha256(salt + ':' + pw);
-    try {
-      localStorage.setItem(PW_KEY, JSON.stringify({ salt, hash, at: Date.now() }));
-      return true;
-    } catch (e) { return false; }
-  }
-
-  async function checkDevicePassword(pw) {
-    try {
-      const raw = localStorage.getItem(PW_KEY);
-      if (!raw) return null;
-      const { salt, hash } = JSON.parse(raw);
-      if (!salt || !hash) return null;
-      const h = await sha256(salt + ':' + pw);
-      return h === hash;
-    } catch (e) { return false; }
-  }
-
+  function clearAuth() { try { sessionStorage.removeItem(SESSION_KEY); localStorage.removeItem(REMEMBER_KEY); } catch (e) {} }
+  function hasDevicePassword() { try { const raw = localStorage.getItem(PW_KEY); return !!(raw && JSON.parse(raw).hash); } catch (e) { return false; } }
+  async function setDevicePassword(pw) { const salt = randomSalt(); const hash = await sha256(salt + ':' + pw); try { localStorage.setItem(PW_KEY, JSON.stringify({ salt, hash, at: Date.now() })); return true; } catch (e) { return false; } }
+  async function checkDevicePassword(pw) { try { const raw = localStorage.getItem(PW_KEY); if (!raw) return null; const { salt, hash } = JSON.parse(raw); if (!salt || !hash) return null; return (await sha256(salt + ':' + pw)) === hash; } catch (e) { return false; } }
   async function tryServerLogin(email, password) {
     const cfg = window.MX_CONFIG || {};
     if (!cfg.url || !cfg.key) return { ok: false, reason: 'not_configured' };
     try {
-      const res = await fetch(String(cfg.url).replace(/\/+$/, '') + '/auth/v1/token?grant_type=password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': cfg.key },
-        body: JSON.stringify({ email, password })
-      });
+      const res = await fetch(String(cfg.url).replace(/\/+$/, '') + '/auth/v1/token?grant_type=password', { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': cfg.key }, body: JSON.stringify({ email, password }) });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.access_token) {
-        return { ok: false, reason: 'bad_credentials', detail: data.error_description || data.msg || '' };
-      }
-      try {
-        localStorage.setItem('mashati_mx_session', JSON.stringify({
-          access_token: data.access_token,
-          refresh_token: data.refresh_token,
-          exp: Date.now() + ((data.expires_in || 3600) - 60) * 1000,
-          uid: data.user && data.user.id,
-          email: data.user && data.user.email
-        }));
-      } catch (e) {}
+      if (!res.ok || !data.access_token) return { ok: false, reason: 'bad_credentials', detail: data.error_description || data.msg || '' };
+      try { localStorage.setItem('mashati_mx_session', JSON.stringify({ access_token: data.access_token, refresh_token: data.refresh_token, exp: Date.now() + ((data.expires_in || 3600) - 60) * 1000, uid: data.user && data.user.id, email: data.user && data.user.email })); } catch (e) {}
       return { ok: true, user: data.user };
-    } catch (e) {
-      return { ok: false, reason: 'network', detail: e.message };
-    }
+    } catch (e) { return { ok: false, reason: 'network', detail: e.message }; }
   }
-
   async function performLogin(email, password, remember) {
-    // 1. Try server
     const serverResult = await tryServerLogin(email, password);
-    if (serverResult.ok) {
-      markAuthenticated(remember);
-      await setDevicePassword(password);
-      return { ok: true };
-    }
-
-    // 2. Try device password
+    if (serverResult.ok) { markAuthenticated(remember); await setDevicePassword(password); return { ok: true }; }
     const deviceCheck = await checkDevicePassword(password);
-    if (deviceCheck === true) {
-      markAuthenticated(remember);
-      return { ok: true };
-    }
-
-    // 3. First-time setup only if server is NOT configured OR unreachable
-    //    (never allow bypassing when server explicitly rejects credentials)
+    if (deviceCheck === true) { markAuthenticated(remember); return { ok: true }; }
     if (deviceCheck === null) {
-      if (serverResult.reason === 'bad_credentials') {
-        return { ok: false, error: 'البريد أو كلمة المرور غير صحيحة' };
-      }
-      const confirmed = confirm(
-        '🔐 لم تُعيَّن كلمة مرور للجهاز بعد.\n\n' +
-        'هل تريد تعيين كلمة المرور التي أدخلتها الآن (' + password.length + ' حرف) ككلمة مرور لهذا الجهاز؟\n\n' +
-        '• ستُستخدم للدخول دون اتصال بالخادم.\n' +
-        '• من يملك هذا الجهاز سيمكنه الدخول بها.'
-      );
-      if (confirmed) {
-        await setDevicePassword(password);
-        markAuthenticated(remember);
-        return { ok: true, firstTime: true };
-      }
+      if (serverResult.reason === 'bad_credentials') return { ok: false, error: 'البريد أو كلمة المرور غير صحيحة' };
+      const confirmed = confirm('🔐 لم تُعيَّن كلمة مرور للجهاز بعد.\n\nهل تريد تعيين كلمة المرور التي أدخلتها ككلمة مرور لهذا الجهاز؟\n\n• ستُستخدم للدخول دون اتصال بالخادم.\n• من يملك هذا الجهاز سيمكنه الدخول بها.');
+      if (confirmed) { await setDevicePassword(password); markAuthenticated(remember); return { ok: true, firstTime: true }; }
       return { ok: false, error: 'تم إلغاء تعيين كلمة مرور الجهاز' };
     }
-
-    // 4. Failure
-    if (serverResult.reason === 'network') {
-      return { ok: false, error: 'تعذّر الاتصال بالخادم — تحقق من الإنترنت، أو استخدم كلمة مرور الجهاز' };
-    }
-    if (serverResult.reason === 'not_configured') {
-      return { ok: false, error: 'الخادم غير مُعدّ — استخدم كلمة مرور الجهاز (أو عيّن واحدة)' };
-    }
+    if (serverResult.reason === 'network') return { ok: false, error: 'تعذّر الاتصال بالخادم — استخدم كلمة مرور الجهاز' };
+    if (serverResult.reason === 'not_configured') return { ok: false, error: 'الخادم غير مُعدّ — استخدم كلمة مرور الجهاز' };
     return { ok: false, error: 'البريد أو كلمة المرور غير صحيحة' };
   }
 
-  /* ---------------- Login UI ---------------- */
-  function setupLoginUI() {
-    const form = $('loginForm');
-    const note = $('loginNote');
-    const cfg = window.MX_CONFIG || {};
+  function getRole() { try { const r = localStorage.getItem(ROLE_KEY); return ROLES[r] ? r : 'admin'; } catch (e) { return 'admin'; } }
+  function setRole(role) {
+    if (!ROLES[role]) return;
+    try { localStorage.setItem(ROLE_KEY, role); } catch (e) {}
+    updateRoleUI(); toast('👤 الدور: ' + ROLES[role].label); logActivity('تبديل الدور إلى ' + ROLES[role].label);
+    if (role === 'lab_keeper' && state.__currentPage && state.__currentPage !== 'lab' && state.__currentPage !== 'home') navigate('home');
+  }
+  function updateRoleUI() {
+    const role = getRole(); const info = ROLES[role];
+    const chip = $('roleChip'); if (chip) { chip.textContent = info.icon + ' ' + info.label; chip.className = 'role-chip ' + (info.chip || ''); }
+    const sr = $('sideRole'); if (sr) sr.textContent = info.label;
+    $$('.nav-btn').forEach(b => { const p = b.getAttribute('data-page'); b.style.display = (role === 'lab_keeper' && p !== 'lab' && p !== 'home') ? 'none' : ''; });
+    $$('[data-role]').forEach(b => b.classList.toggle('btn-primary', b.getAttribute('data-role') === role));
+    $$('[data-role]').forEach(b => b.classList.toggle('btn-ghost', b.getAttribute('data-role') !== role));
+  }
 
+  function setupLoginUI() {
+    const form = $('loginForm'), note = $('loginNote'), cfg = window.MX_CONFIG || {};
     if (!cfg.url || !cfg.key) {
       note.style.display = 'block';
-      if (hasDevicePassword()) {
-        note.innerHTML = '🔐 <b>الخادم غير مُعدّ.</b> الدخول بكلمة مرور هذا الجهاز فقط (مُعيَّنة مسبقاً).';
-      } else {
-        note.innerHTML = '🔧 <b>الخادم غير مُعدّ، ولا توجد كلمة مرور للجهاز بعد.</b><br>أدخل بريدك وكلمة المرور، ثم أكّد تعيينها ككلمة مرور للجهاز في المرة الأولى.';
-      }
+      note.innerHTML = hasDevicePassword() ? '🔐 <b>الخادم غير مُعدّ.</b> الدخول بكلمة مرور هذا الجهاز.' : '🔧 <b>لا خادم ولا كلمة مرور جهاز.</b> أدخل بياناتك، وأكّد تعيينها ككلمة مرور للجهاز.';
     } else {
       note.style.display = 'block';
-      note.innerHTML = '🟢 <b>الخادم مُعدّ.</b> الدخول بالبريد عبر Supabase أولاً، وكلمة مرور الجهاز كبديل عند انقطاع الإنترنت.';
+      note.innerHTML = '🟢 <b>الخادم مُعدّ.</b> الدخول بالبريد، وكلمة مرور الجهاز كبديل عند انقطاع الإنترنت.';
     }
-
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = $('lgEmail').value.trim();
-      const password = $('lgPassword').value;
-      const remember = $('lgRemember').checked;
-      const errorBox = $('loginError');
-      const btn = $('loginBtn');
-
-      if (!email || !password) {
-        errorBox.textContent = 'أدخل البريد وكلمة المرور';
-        return;
-      }
-
-      errorBox.textContent = '';
-      btn.disabled = true;
-      const originalText = btn.textContent;
-      btn.innerHTML = '<span class="spinner"></span> جارٍ الدخول...';
-
+      const email = $('lgEmail').value.trim(), password = $('lgPassword').value, remember = $('lgRemember').checked;
+      const errorBox = $('loginError'), btn = $('loginBtn');
+      if (!email || !password) { errorBox.textContent = 'أدخل البريد وكلمة المرور'; return; }
+      errorBox.textContent = ''; btn.disabled = true;
+      const orig = btn.textContent; btn.innerHTML = '<span class="spinner"></span> جارٍ الدخول...';
       try {
-        const result = await performLogin(email, password, remember);
-        if (result.ok) {
-          if (result.firstTime) toast('🔐 تم تعيين كلمة مرور الجهاز');
-          await bootApp();
-        } else {
-          errorBox.textContent = result.error || 'فشل الدخول';
-        }
-      } catch (err) {
-        errorBox.textContent = 'خطأ: ' + (err.message || err);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = originalText || 'دخول';
+        const r = await performLogin(email, password, remember);
+        if (r.ok) { if (r.firstTime) toast('🔐 تم تعيين كلمة مرور الجهاز'); await bootApp(); }
+        else errorBox.textContent = r.error || 'فشل الدخول';
+      } catch (err) { errorBox.textContent = 'خطأ: ' + (err.message || err); }
+      finally { btn.disabled = false; btn.textContent = orig || 'دخول'; }
+    });
+  }
+
+  function doLogout() { if (!confirm('تسجيل الخروج؟')) return; clearAuth(); flushSave(); toast('👋 تم تسجيل الخروج'); setTimeout(() => location.reload(), 300); }
+
+  /* ========== Students Seed ========== */
+  function seedStudents() {
+    const names = {
+      'أ': ['أحمد القرني','سلطان الرشيد','عمر الحمدان','فهد الغامدي','ماجد الزهراني','بندر العتيبي','خالد الشهري','سعود المالكي','ناصر القحطاني','تركي الدوسري','عبدالله الحربي','محمد السبيعي'],
+      'ب': ['فيصل الدوسري','خالد الشمري','عمر البقمي','أحمد المطيري','سعد العنزي','يوسف الغامدي'],
+      'ج': ['ماجد البقمي','بندر العنزي','سعود الدوسري','فهد القحطاني'],
+      'د': ['سعد الحربي','طلال الشمري','مشعل العتيبي'],
+      'ه': ['يوسف المطيري','عبدالعزيز السبيعي','راكان الزهراني','حمود المالكي','بدر القرني']
+    };
+    Object.keys(names).forEach(sec => {
+      const ck = CURR_KEY + '_' + sec;
+      if (!state.classes[ck] || !state.classes[ck].length) {
+        state.classes[ck] = names[sec].map((name, i) => ({
+          id: 'st_' + sec + '_' + i,
+          name, code: SEC_EN[sec] + String(i + 1).padStart(2, '0'),
+          group: (i % 9) + 1, status: 'active', createdAt: Date.now()
+        }));
       }
     });
   }
 
-  function doLogout() {
-    if (!confirm('تسجيل الخروج من هذا الجهاز؟')) return;
-    clearAuth();
-    flushSave();
-    toast('👋 تم تسجيل الخروج');
-    setTimeout(() => location.reload(), 300);
+  function getStudents(ck) { return (state.classes[ck] || []).filter(s => s.status !== 'archived'); }
+  function splitClass(ck) { const p = (ck || '').split('_'); return p.length >= 3 ? { currKey: p[0] + '_' + p[1], section: p[2] } : null; }
+  function classLabel(ck) { const p = splitClass(ck); return p ? CURR_LABEL + ' — شعبة ' + p.section : ck; }
+  function allClassKeys() { const out = []; Object.keys(state.sections).forEach(k => (state.sections[k] || []).forEach(s => out.push(k + '_' + s))); return out; }
+
+  /* ========== Grade helpers ========== */
+  function setGrade(type, stid, value) {
+    if (!state.studentGrades[stuOpenClass]) state.studentGrades[stuOpenClass] = {};
+    if (!state.studentGrades[stuOpenClass][type]) state.studentGrades[stuOpenClass][type] = {};
+    if (value === '' || value === null) delete state.studentGrades[stuOpenClass][type][stid];
+    else state.studentGrades[stuOpenClass][type][stid] = { value: Number(value) || 0, ts: Date.now() };
+    save();
+  }
+  function getGrade(type, stid) { return state.studentGrades[stuOpenClass]?.[type]?.[stid]?.value; }
+
+  function getBehaviorTotal(stid) {
+    if (!state.behavior[stuOpenClass]) return 0;
+    let t = 0;
+    Object.keys(state.behavior[stuOpenClass]).forEach(sk => { const r = state.behavior[stuOpenClass][sk]?.[stid]; if (r && r.delta) t += r.delta; });
+    return t;
+  }
+  function addBehavior(stid, delta) {
+    const sk = todayKey();
+    if (!state.behavior[stuOpenClass]) state.behavior[stuOpenClass] = {};
+    if (!state.behavior[stuOpenClass][sk]) state.behavior[stuOpenClass][sk] = {};
+    const cur = state.behavior[stuOpenClass][sk][stid] || { delta: 0, ts: Date.now() };
+    cur.delta += delta; cur.ts = Date.now();
+    state.behavior[stuOpenClass][sk][stid] = cur;
+    save();
   }
 
-  /* ---------------- Navigation ---------------- */
+  function setAttendance(stid, status) {
+    const sk = todayKey();
+    if (!state.attendance[stuOpenClass]) state.attendance[stuOpenClass] = {};
+    if (!state.attendance[stuOpenClass][sk]) state.attendance[stuOpenClass][sk] = {};
+    if (state.attendance[stuOpenClass][sk][stid]?.status === status) delete state.attendance[stuOpenClass][sk][stid];
+    else state.attendance[stuOpenClass][sk][stid] = { status, ts: Date.now() };
+    save();
+  }
+  function getAttendance(stid) {
+    const sk = attSessionKey || todayKey();
+    return state.attendance[stuOpenClass]?.[sk]?.[stid]?.status || '';
+  }
+
+  /* ========== Year Work ========== */
+  function calcYearWork(stid) {
+    const ck = stuOpenClass;
+    const part = getGrade('participation', stid), res = getGrade('research', stid), ws = getGrade('worksheets', stid);
+    const hwList = state.homework[ck] || [];
+    let hwT = 0, hwM = 0, hwDone = 0;
+    hwList.forEach(a => { const g = a.grades?.[stid]; if (g) { hwT += g.value; hwDone++; } hwM += a.maxGrade || 10; });
+    const hwPct = hwM > 0 ? Math.round((hwT / hwM) * 100) : null;
+    const ex = state.exams[ck] || { quizzes: [], chapters: [] };
+    const exScores = [];
+    (ex.quizzes || []).forEach(q => { const g = q.grades?.[stid]; if (g) exScores.push((g.value / (q.maxGrade || 10)) * 100); });
+    (ex.chapters || []).forEach(c => { const g = c.grades?.[stid]; if (g) exScores.push((g.value / (c.maxGrade || 5)) * 100); });
+    exScores.sort((a, b) => b - a);
+    const top3 = exScores.slice(0, 3);
+    const exAvg = top3.length ? top3.reduce((a, b) => a + b, 0) / top3.length : null;
+    const behT = getBehaviorTotal(stid);
+    const actPct = Math.max(0, Math.min(100, (behT / 5) * 100));
+    function w(pct, weight) { return pct == null ? 0 : (pct * weight / 100); }
+    const yw = w(part != null ? (part/10*100) : null, 10) + w(hwPct, 10) + w(exAvg, 15) + w(res != null ? (res/10*100) : null, 10) + w(actPct, 5) + w(ws != null ? (ws/10*100) : null, 10);
+    const fe = state.finalExams[ck]?.[stid]?.value;
+    const feScore = fe != null ? (fe / 100) * 40 : 0;
+    const total = yw + feScore;
+    const ywPct = (yw / 60) * 100;
+    return { yw: Math.round(yw * 10) / 10, ywPct: Math.round(ywPct), fe: fe != null ? fe : null, feScore: Math.round(feScore * 10) / 10, total: Math.round(total * 10) / 10, hwPct, exAvg: exAvg != null ? Math.round(exAvg) : null, part, res, ws, actPct: Math.round(actPct), hwDone, hwTotal: hwList.length };
+  }
+  function gradeLabel(pct) {
+    if (pct >= 90) return { l: 'ممتاز', cls: 'green' };
+    if (pct >= 80) return { l: 'جيد جداً', cls: 'teal' };
+    if (pct >= 70) return { l: 'جيد', cls: 'violet' };
+    if (pct >= 60) return { l: 'مقبول', cls: 'amber' };
+    return { l: 'ضعيف', cls: 'red' };
+  }
+
+  /* ========== Navigation & Class State ========== */
+  let stuOpenClass = null;
+  let stuActiveTab = 'attendance';
+  let gradesSubTab = 'homework';
+  let followupSubTab = 'followups';
+  let currSubTab = 'book';
+  let attSessionKey = null;
+
   function navigate(page) {
     const role = getRole();
-    if (role === 'lab_keeper' && page !== 'lab' && page !== 'home') {
-      toast('🔒 دور محضّر المختبر: الوصول إلى مختبري فقط');
-      return;
-    }
+    if (role === 'lab_keeper' && page !== 'lab' && page !== 'home') { toast('🔒 دور محضّر المختبر: مختبري فقط'); return; }
     if (!PAGES[page]) page = 'home';
-
     if (state) { state.__currentPage = page; save(); }
-
     $$('.nav-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-page') === page));
     $$('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
-
-    const info = PAGES[page];
-    $('pageTitle').textContent = info.title;
-    $('pageSub').textContent = info.sub;
-
+    $('pageTitle').textContent = PAGES[page].title;
+    $('pageSub').textContent = PAGES[page].sub;
     if (window.innerWidth < 900) $('sidebar').classList.remove('open');
-    const content = document.querySelector('.content');
-    if (content) content.scrollTop = 0;
-  }
-  window.mashatiNavigate = navigate;
-
-  /* ---------------- Boot ---------------- */
-  async function bootApp() {
-    $('loginGate').style.display = 'none';
-    $('app').classList.add('active');
-
-    state = loadState();
-
-    updateProfileUI();
-    updateRoleUI();
-    setupNav();
-    setupLogout();
-    setupProfileForm();
-    setupRoleButtons();
-    updateHomeUI();
-    renderActivity();
-
-    const startPage = (state.__currentPage && PAGES[state.__currentPage]) ? state.__currentPage : 'home';
-    navigate(startPage);
-
-    logActivity('تسجيل دخول — ' + ROLES[getRole()].label);
-
-    console.log('%c✅ منصة المشاطي — المرحلة 1 جاهزة', 'color:#0f766e;font-weight:bold;font-size:14px');
-    console.log('   التخزين: localStorage["' + STORAGE_KEY + '"]');
-    console.log('   الدور الحالي:', getRole());
-    console.log('   الخادم:', (window.MX_CONFIG && window.MX_CONFIG.url ? 'مُعدّ' : 'غير مُعدّ'));
+    if (page === 'home') renderHome();
+    else if (page === 'classes') { if (stuOpenClass) renderClassScreen(); else renderClassesList(); }
+    else if (page === 'settings') { const form = $('profileForm'); if (form && state) { form.teacherName.value = state.profile.teacherName || ''; form.email.value = state.profile.email || ''; form.school.value = state.profile.school || ''; } updateRoleUI(); }
+    const c = document.querySelector('.content'); if (c) c.scrollTop = 0;
   }
 
-  /* ---------------- UI helpers ---------------- */
-  function updateProfileUI() {
-    const p = (state && state.profile) || {};
-    const rawName = p.teacherName || 'المعلم';
-    const display = rawName.startsWith('أ.') ? rawName : 'أ. ' + rawName;
-    const avatar = (rawName.replace(/^أ\.?\s*/, '').charAt(0) || 'ع').toUpperCase();
-
-    $('sideName').textContent = display;
-    $('sideAvatar').textContent = avatar;
-    $('heroName').textContent = display;
+  function openClass(ck) {
+    stuOpenClass = ck;
+    stuActiveTab = 'attendance';
+    gradesSubTab = 'homework';
+    followupSubTab = 'followups';
+    currSubTab = 'book';
+    attSessionKey = todayKey();
+    save();
+    renderClassScreen();
+    logActivity('فتح ' + classLabel(ck));
+  }
+  function closeClass() {
+    stuOpenClass = null;
+    stuActiveTab = 'attendance';
+    save();
+    renderClassesList();
   }
 
-  function updateHomeUI() {
-    $('heroToday').textContent = fmtDay(Date.now());
-    $('heroTodaySub').textContent = 'اليوم: ' + fmtDay(Date.now());
-  }
-
-  function setupNav() {
-    $$('.nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => navigate(btn.getAttribute('data-page')));
+  /* ========== Render Classes List ========== */
+  function renderClassesList() {
+    const view = $('classesView'), detail = $('classDetail');
+    if (!view || !detail) return;
+    detail.style.display = 'none';
+    view.style.display = 'block';
+    const keys = allClassKeys();
+    let h = '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">'
+      + '<div><div class="card-title" style="margin:0">👥 الفصول والطلاب</div><div class="card-sub" style="margin:2px 0 0">اختر شعبة لفتح الشاشة الموحّدة</div></div>'
+      + '<div class="badge teal">' + keys.length + ' شعبة</div>'
+      + '</div>';
+    h += '<div class="classes-grid">';
+    keys.forEach(ck => {
+      const p = splitClass(ck); const students = getStudents(ck);
+      const color = CLASS_COLORS[p.section] || { bg: '#64748b' };
+      const totalPts = students.reduce((s, st) => s + Math.max(0, getBehaviorTotal(st.id)), 0);
+      h += '<div class="class-card" style="border-top-color:' + color.bg + '" onclick="MSH.openClass(\'' + ck + '\')">'
+        + '<div class="class-card-head">'
+        + '<div class="class-letter" style="background:' + color.bg + '">' + esc(p.section) + '</div>'
+        + '<div class="class-card-info"><div class="class-card-name">شعبة ' + esc(p.section) + '</div><div class="class-card-sub">' + esc(CURR_LABEL) + '</div></div>'
+        + '<span style="color:var(--slate-400);font-size:18px;font-weight:800">←</span>'
+        + '</div>'
+        + '<div class="class-card-stats">'
+        + '<span class="badge">👥 ' + students.length + ' طالب</span>'
+        + '<span class="badge teal">⭐ ' + totalPts + ' نقطة</span>'
+        + '</div></div>';
     });
-    $('hamburger').addEventListener('click', () => $('sidebar').classList.toggle('open'));
+    h += '</div>';
+    view.innerHTML = h;
   }
 
-  function setupLogout() {
-    $('logoutBtn').addEventListener('click', doLogout);
-  }
-
-  function setupProfileForm() {
-    const form = $('profileForm');
-    if (!form) return;
-    const p = state.profile || {};
-    form.teacherName.value = p.teacherName || '';
-    form.email.value = p.email || '';
-    form.school.value = p.school || '';
-    form.addEventListener('input', () => {
-      state.profile.teacherName = form.teacherName.value.trim() || 'المعلم';
-      state.profile.email = form.email.value.trim();
-      state.profile.school = form.school.value.trim();
-      updateProfileUI();
-      save();
+  /* ========== Render Class Screen ========== */
+  function renderClassScreen() {
+    if (!stuOpenClass) return;
+    const view = $('classesView'), detail = $('classDetail');
+    if (!view || !detail) return;
+    view.style.display = 'none';
+    detail.style.display = 'block';
+    const p = splitClass(stuOpenClass);
+    const students = getStudents(stuOpenClass);
+    const color = CLASS_COLORS[p.section] || { bg: '#0d9488' };
+    let h = '<div class="class-screen">';
+    h += '<div class="class-header" style="background:linear-gradient(120deg,' + color.bg + ',' + color.bg + 'cc)">';
+    h += '<button class="back-btn" onclick="MSH.closeClass()">→ رجوع</button>';
+    h += '<div class="class-title"><h2>' + esc(classLabel(stuOpenClass)) + '</h2><small>' + students.length + ' طالب · ' + fmtDay(Date.now()) + '</small></div>';
+    h += '<div class="class-header-actions"><button onclick="MSH.openWhiteboard()">🖊️ السبورة</button></div>';
+    h += '</div>';
+    h += '<div class="class-tabs">';
+    TAB_LIST.forEach(t => {
+      h += '<button class="class-tab-btn ' + (stuActiveTab === t.k ? 'active' : '') + '" onclick="MSH.switchTab(\'' + t.k + '\')">' + t.l + '</button>';
     });
+    h += '</div>';
+    h += '<div class="class-content" id="classContent"></div>';
+    h += '</div>';
+    detail.innerHTML = h;
+    renderClassContent();
   }
 
-  function setupRoleButtons() {
-    $$('.btn-role').forEach(b => {
-      b.addEventListener('click', () => setRole(b.getAttribute('data-role')));
+  function switchTab(tab) {
+    stuActiveTab = tab;
+    $$('.class-tab-btn').forEach(b => {
+      const label = b.textContent.toLowerCase();
+      const map = { attendance: 'الحضور', grades: 'الدرجات', behavior: 'السلوك', followup: 'المتابعة', curriculum: 'المنهج', points: 'النقاط', yearwork: 'أعمال السنة', students: 'الطلاب' };
+      b.classList.toggle('active', b.textContent.includes(map[tab]));
     });
-  }
-
-  /* ---------------- Student mode (?chat=1 / ?mx=) ---------------- */
-  function checkStudentMode() {
-    const params = new URLSearchParams(location.search);
-    if (params.has('chat') || params.has('mx')) {
-      $('studentHint').classList.add('show');
-      $('loginGate').style.display = 'none';
-      return true;
+    // Ensure the correct tab is active
+    const tabs = $$('.class-tab-btn');
+    const tabIdx = TAB_LIST.findIndex(t => t.k === tab);
+    if (tabIdx >= 0 && tabs[tabIdx]) {
+      tabs.forEach(b => b.classList.remove('active'));
+      tabs[tabIdx].classList.add('active');
     }
-    return false;
+    renderClassContent();
   }
 
-  /* ---------------- Init ---------------- */
-  function init() {
-    if (checkStudentMode()) {
-      console.log('%c🎓 وضع الطالب — قيد الإنشاء (المرحلة 5)', 'color:#7c3aed;font-weight:bold');
-      return;
-    }
+  function renderClassContent() {
+    const box = $('classContent');
+    if (!box) return;
+    let h = '';
+    if (stuActiveTab === 'attendance') h = renderAttendanceTab();
+    else if (stuActiveTab === 'grades') h = renderGradesTab();
+    else if (stuActiveTab === 'behavior') h = renderBehaviorTab();
+    else if (stuActiveTab === 'followup') h = renderFollowupTab();
+    else if (stuActiveTab === 'curriculum') h = renderCurriculumTab();
+    else if (stuActiveTab === 'points') h = renderPointsTab();
+    else if (stuActiveTab === 'yearwork') h = renderYearWorkTab();
+    else if (stuActiveTab === 'students') h = renderStudentsTab();
+    box.innerHTML = h;
+  }
 
-    setupLoginUI();
+  /* ========== Tab: Attendance ========== */
+  function renderAttendanceTab() {
+    const students = getStudents(stuOpenClass);
+    if (!students.length) return '<div class="empty"><div class="empty-icon">👥</div><h4>لا يوجد طلاب</h4></div>';
+    if (!attSessionKey) attSessionKey = todayKey();
+    let present = 0, absent = 0, late = 0, unset = 0;
+    students.forEach(st => { const s = getAttendance(st.id); if (s === 'present') present++; else if (s === 'absent') absent++; else if (s === 'late') late++; else unset++; });
+    let h = '<div class="att-toolbar">'
+      + '<label>📅 الجلسة:</label>'
+      + '<input type="date" value="' + attSessionKey + '" onchange="MSH.setAttSession(this.value)">'
+      + '<button class="btn btn-ghost btn-sm" onclick="MSH.attAll(\'present\')">✅ الكل حاضر</button>'
+      + '<button class="btn btn-ghost btn-sm" onclick="MSH.attAll(\'absent\')">❌ الكل غائب</button>'
+      + '<button class="btn btn-ghost btn-sm" onclick="MSH.attAll(\'\')">↺ تفريغ</button>'
+      + '</div>';
+    h += '<div class="att-summary">'
+      + '<span class="att-chip present">✅ حاضر: ' + present + '</span>'
+      + '<span class="att-chip absent">❌ غائب: ' + absent + '</span>'
+      + '<span class="att-chip late">⏰ متأخر: ' + late + '</span>'
+      + '<span class="att-chip total">👥 إجمالي: ' + students.length + '</span>'
+      + '</div>';
+    students.forEach((st, i) => {
+      const stt = getAttendance(st.id);
+      const beh = getBehaviorTotal(st.id);
+      const behSession = state.behavior[stuOpenClass]?.[attSessionKey]?.[st.id]?.delta || 0;
+      h += '<div class="att-row ' + (stt || '') + '">'
+        + '<div class="att-num">' + (i + 1) + '</div>'
+        + '<div class="att-name">' + esc(st.name) + '<small>' + esc(st.code || '') + '</small></div>'
+        + '<div class="att-status-btns">'
+        + '<button class="att-status-btn ' + (stt === 'present' ? 'on present' : '') + '" onclick="MSH.setAtt(\'' + esc(st.id) + '\',\'present\')">✅ حاضر</button>'
+        + '<button class="att-status-btn ' + (stt === 'absent' ? 'on absent' : '') + '" onclick="MSH.setAtt(\'' + esc(st.id) + '\',\'absent\')">❌ غائب</button>'
+        + '<button class="att-status-btn ' + (stt === 'late' ? 'on late' : '') + '" onclick="MSH.setAtt(\'' + esc(st.id) + '\',\'late\')">⏰ متأخر</button>'
+        + '</div>'
+        + '<div class="att-beh-btns">'
+        + '<button class="att-beh-btn pos" onclick="MSH.beh(\'' + esc(st.id) + '\',1)" title="+1">👍</button>'
+        + '<button class="att-beh-btn neg" onclick="MSH.beh(\'' + esc(st.id) + '\',-1)" title="-1">👎</button>'
+        + '<span class="att-beh-total" title="مجموع النقاط الكلي">' + beh + '</span>'
+        + (behSession !== 0 ? '<span class="att-beh-total" style="background:var(--amber-100);color:var(--amber-600)" title="هذه الجلسة">' + (behSession > 0 ? '+' : '') + behSession + '</span>' : '')
+        + '</div>'
+        + '</div>';
+    });
+    return h;
+  }
+  function setAtt(stid, status) { setAttendance(stid, status); renderClassContent(); }
+  function attAll(status) {
+    const students = getStudents(stuOpenClass); const sk = attSessionKey || todayKey();
+    if (!state.attendance[stuOpenClass]) state.attendance[stuOpenClass] = {};
+    if (!state.attendance[stuOpenClass][sk]) state.attendance[stuOpenClass][sk] = {};
+    students.forEach(st => { if (!status) delete state.attendance[stuOpenClass][sk][st.id]; else state.attendance[stuOpenClass][sk][st.id] = { status, ts: Date.now() }; });
+    save(); renderClassContent();
+  }
+  function setAttSession(v) { attSessionKey = v; renderClassContent(); }
+  function beh(stid, delta) { addBehavior(stid, delta); renderClassContent(); }
 
-    if (isSessionValid()) {
-      bootApp().catch(e => {
-        console.error('Boot failed:', e);
-        $('loginError').textContent = 'خطأ في التحميل: ' + e.message;
+  /* ========== Tab: Grades ========== */
+  function renderGradesTab() {
+    const students = getStudents(stuOpenClass);
+    if (!students.length) return '<div class="empty"><h4>لا يوجد طلاب</h4></div>';
+    let h = '<div class="sub-tabs">';
+    const subs = [['homework', '📝 واجبات'], ['exams', '📊 اختبارات'], ['participation', '✋ مشاركة'], ['research', '🔬 بحوث'], ['worksheets', '📄 أوراق عمل']];
+    subs.forEach(s => { h += '<button class="sub-tab ' + (gradesSubTab === s[0] ? 'active' : '') + '" onclick="MSH.setGradesSub(\'' + s[0] + '\')">' + s[1] + '</button>'; });
+    h += '</div>';
+    if (gradesSubTab === 'homework') h += renderHomeworkGrades(students);
+    else if (gradesSubTab === 'exams') h += renderExamsGrades(students);
+    else if (gradesSubTab === 'participation') h += renderSimpleGradeTable('participation', 'المشاركة', 10, students);
+    else if (gradesSubTab === 'research') h += renderSimpleGradeTable('research', 'البحوث', 10, students);
+    else if (gradesSubTab === 'worksheets') h += renderSimpleGradeTable('worksheets', 'أوراق العمل', 10, students);
+    return h;
+  }
+  function renderSimpleGradeTable(type, label, max, students) {
+    let h = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px"><div style="font-weight:800;font-size:14px">' + label + ' (من ' + max + ')</div><div><button class="btn btn-ghost btn-sm" onclick="MSH.fillGrade(\'' + type + '\',' + max + ')">🎯 منح الكل</button> <button class="btn btn-ghost btn-sm" onclick="MSH.fillGrade(\'' + type + '\',\'\')">🗑 تفريغ</button></div></div>';
+    h += '<div style="overflow-x:auto"><table class="grade-table"><thead><tr><th>#</th><th style="text-align:right">الطالب</th><th>' + label + '</th><th>النسبة</th></tr></thead><tbody>';
+    students.forEach((st, i) => {
+      const v = getGrade(type, st.id);
+      const pct = v != null ? Math.round((v / max) * 100) : null;
+      h += '<tr><td>' + (i + 1) + '</td><td class="name-cell">' + esc(st.name) + '</td>'
+        + '<td><input class="grade-input" type="number" min="0" max="' + max + '" value="' + (v != null ? v : '') + '" onchange="MSH.setG(\'' + type + '\',\'' + esc(st.id) + '\',this.value,this)" placeholder="—"></td>'
+        + '<td><span class="grade-cell-pct">' + (pct != null ? pct + '%' : '—') + '</span></td></tr>';
+    });
+    h += '</tbody></table></div>';
+    return h;
+  }
+  function renderHomeworkGrades(students) {
+    const hw = state.homework[stuOpenClass] || [];
+    let h = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px"><div style="font-weight:800;font-size:14px">📝 الواجبات (' + hw.length + ')</div><button class="btn btn-primary btn-sm" onclick="MSH.addHomework()">+ واجب جديد</button></div>';
+    if (!hw.length) return h + '<div class="empty"><div class="empty-icon">📝</div><h4>لا توجد واجبات</h4><p>أضف واجباً لتبدأ الرصد</p></div>';
+    hw.forEach(a => {
+      h += '<div style="background:var(--slate-50);border:1px solid var(--slate-200);border-radius:11px;padding:12px;margin-bottom:10px">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap"><div><div style="font-weight:800">' + esc(a.title) + '</div><div style="font-size:11px;color:var(--slate-500);font-weight:700">' + esc(a.date || '') + ' · من ' + a.maxGrade + '</div></div><button class="btn btn-danger btn-sm" onclick="MSH.delHomework(\'' + a.id + '\')">🗑</button></div>'
+        + '<div style="overflow-x:auto"><table class="grade-table"><thead><tr><th>#</th><th style="text-align:right">الطالب</th><th>الدرجة</th></tr></thead><tbody>';
+      students.forEach((st, i) => {
+        const g = a.grades?.[st.id];
+        h += '<tr><td>' + (i + 1) + '</td><td class="name-cell">' + esc(st.name) + '</td>'
+          + '<td><input class="grade-input" type="number" min="0" max="' + a.maxGrade + '" value="' + (g ? g.value : '') + '" onchange="MSH.setHw(\'' + a.id + '\',\'' + esc(st.id) + '\',this.value,this)"></td></tr>';
       });
-    } else {
-      setTimeout(() => { const f = $('lgEmail'); if (f) f.focus(); }, 100);
-    }
-
-    console.log('%c🔧 منصة المشاطي — المرحلة 1', 'color:#0f766e;font-weight:bold;font-size:14px');
-    console.log('   في انتظار تسجيل الدخول...');
+      h += '</tbody></table></div></div>';
+    });
+    return h;
   }
-
-  /* ---------------- Debug API ---------------- */
-  window.mashatiDebug = {
-    state: () => state,
-    role: getRole,
-    setRole,
-    hasDevicePassword,
-    clearAuth: () => { clearAuth(); location.reload(); },
-    resetDevicePassword: () => {
-      if (confirm('حذف كلمة مرور هذا الجهاز؟ ستحتاج لتعيينها من جديد عند الدخول التالي.')) {
-        localStorage.removeItem(PW_KEY);
-        toast('🗑️ تم حذف كلمة مرور الجهاز');
-      }
-    },
-    dump: () => { const s = loadState(); console.log(s); return s; },
-    saveNow: () => { if (state) persistState(); }
-  };
-
-  /* ---------------- Start ---------------- */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+  function renderExamsGrades(students) {
+    const ex = state.exams[stuOpenClass] || { quizzes: [], chapters: [] };
+    let h = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px"><div style="font-weight:800;font-size:14px">📊 الاختبارات</div><button class="btn btn-primary btn-sm" onclick="MSH.addExam()">+ اختبار جديد</button></div>';
+    const all = [...(ex.chapters || []), ...(ex.quizzes || [])];
+    if (!all.length) return h + '<div class="empty"><div class="empty-icon">📊</div><h4>لا توجد اختبارات</h4></div>';
+    all.forEach(e => {
+      const isChapter = e.chapterName !== undefined;
+      const label = isChapter ? (e.chapterName || 'اختبار') : (e.title || 'اختبار قصير');
+      const max = e.maxGrade || (isChapter ? 5 : 10);
+      h += '<div style="background:var(--slate-50);border:1px solid var(--slate-200);border-radius:11px;padding:12px;margin-bottom:10px">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap"><div style="font-weight:800">' + esc(label) + ' <span class="badge ' + (isChapter ? 'violet' : 'amber') + '">' + (isChapter ? 'باب' : 'قصير') + '</span> · من ' + max + '</div><button class="btn btn-danger btn-sm" onclick="MSH.delExam(\'' + (isChapter ? 'ch' : 'q') + '\',\'' + e.id + '\')">🗑</button></div>'
+        + '<div style="overflow-x:auto"><table class="grade-table"><thead><tr><th>#</th><th style="text-align:right">الطالب</th><th>الدرجة</th></tr></thead><tbody>';
+      students.forEach((st, i) => {
+        const g = e.grades?.[st.id];
+        h += '<tr><td>' + (i + 1) + '</td><td class="name-cell">' + esc(st.name) + '</td>'
+          + '<td><input class="grade-input" type="number" min="0" max="' + max + '" step="0.5" value="' + (g ? g.value : '') + '" onchange="MSH.setExam(\'' + (isChapter ? 'ch' : 'q') + '\',\'' + e.id + '\',\'' + esc(st.id) + '\',this.value,this)"></td></tr>';
+      });
+      h += '</tbody></table></div></div>';
+    });
+    return h;
   }
-})();
-</script>
-
-</body>
-</html>
+  function setGradesSub(s) { gradesSubTab = s; renderClassContent(); }
+  function setG(type, stid, v, input) {
+    setGrade(type, stid, v);
+    if (input) { input.classList.add('saved'); setTimeout(() => input.classList.remove('saved'), 900); }
+    const pctEl = input?.parentElement?.nextElementSibling;
+    renderClassContent();
+  }
+  function fillGrade(type, v) {
+    const students = getStudents(stuOpenClass);
+    students.forEach(st => setGrade(type, st.id, v === '' ? null : v));
+    renderClassContent();
+    toast(v === '' ? 'تم التفريغ' : 'تم منح الكل ' + v);
+  }
+  function setHw(aid, stid, v, input) {
+    const hw = state.homework[stuOpenClass] || [];
+    const a = hw.find(x => x.id === aid);
+    if (!a) return;
+    if (!a.grades) a.grades = {};
+    if (v === '' || v === null) delete a.grades[stid];
+    else a.grades[stid] = { value: Math.max(0, Math.min(a.maxGrade, Number(v) || 0)), ts: Date.now() };
+    save();
+    if (input) { input.classList.add('saved'); setTimeout(() => input.classList.remove('saved'), 900); }
+  }
+  function setExam(kind, eid, stid, v, input) {
+    const ex = state.exams[stuOpenClass] || {};
+    const arr = kind === 'ch' ? (ex.chapters || []) : (ex.quizzes || []);
+    const e = arr.find(x => x.id === eid);
+    if (!e) return;
+    if (!e.grades) e.grades = {};
+    const max = e.maxGrade || (kind === 'ch' ? 5 : 10);
+    if (v === '' || v === null) delete e.grades[stid];
+    else e.grades[stid] = { value: Math.max(
