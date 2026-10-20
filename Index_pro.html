@@ -1045,4 +1045,380 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
     if (!e.grades) e.grades = {};
     const max = e.maxGrade || (kind === 'ch' ? 5 : 10);
     if (v === '' || v === null) delete e.grades[stid];
-    else e.grades[stid] = { value: Math.max(
+    else e.grades[stid] = { value: Math.max(0, Math.min(max, Number(v) || 0)), ts: Date.now() };
+    save();
+    if (input) { input.classList.add('saved'); setTimeout(() => input.classList.remove('saved'), 900); }
+  }
+  function setGradesSub(s) { gradesSubTab = s; renderClassContent(); }
+  function setG(type, stid, v, input) {
+    setGrade(type, stid, v);
+    if (input) { input.classList.add('saved'); setTimeout(() => input.classList.remove('saved'), 900); }
+    renderClassContent();
+  }
+  function fillGrade(type, v) {
+    const students = getStudents(stuOpenClass);
+    students.forEach(st => setGrade(type, st.id, v === '' ? null : v));
+    renderClassContent();
+    toast(v === '' ? 'تم التفريغ' : 'تم منح الكل ' + v);
+  }
+  function setHw(aid, stid, v, input) {
+    const hw = state.homework[stuOpenClass] || [];
+    const a = hw.find(x => x.id === aid);
+    if (!a) return;
+    if (!a.grades) a.grades = {};
+    if (v === '' || v === null) delete a.grades[stid];
+    else a.grades[stid] = { value: Math.max(0, Math.min(a.maxGrade, Number(v) || 0)), ts: Date.now() };
+    save();
+    if (input) { input.classList.add('saved'); setTimeout(() => input.classList.remove('saved'), 900); }
+  }
+
+  function renderBehaviorTab() {
+    const students = getStudents(stuOpenClass);
+    let h = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><div style="font-weight:800;font-size:14px">🎭 السلوك والنقاط</div></div>';
+    students.forEach(st => {
+      const beh = getBehaviorTotal(st.id);
+      h += '<div class="beh-row"><div class="beh-name">' + esc(st.name) + '</div><div class="beh-total ' + (beh > 0 ? 'pos' : beh < 0 ? 'neg' : 'zero') + '">' + (beh > 0 ? '+' : '') + beh + '</div><div class="beh-actions"><button class="beh-btn pos" onclick="MSH.beh(\'' + esc(st.id) + '\',1)">👍 +1</button><button class="beh-btn neg" onclick="MSH.beh(\'' + esc(st.id) + '\',-1)">👎 -1</button></div></div>';
+    });
+    return h;
+  }
+
+  function renderFollowupTab() {
+    const students = getStudents(stuOpenClass);
+    let h = '<div class="sub-tabs">'
+      + '<button class="sub-tab ' + (followupSubTab === 'followups' ? 'active' : '') + '" onclick="MSH.setFollowupSub(\'followups\')">📌 المتابعات</button>'
+      + '<button class="sub-tab ' + (followupSubTab === 'late' ? 'active' : '') + '" onclick="MSH.setFollowupSub(\'late\')">⏰ المتأخرون</button>'
+      + '<button class="sub-tab ' + (followupSubTab === 'learningloss' ? 'active' : '') + '" onclick="MSH.setFollowupSub(\'learningloss\')">📉 الفاقد التعليمي</button>'
+      + '</div>';
+    if (followupSubTab === 'followups') h += renderFollowupsList(students);
+    else if (followupSubTab === 'late') h += renderLateList(students);
+    else h += renderLearningLossList(students);
+    return h;
+  }
+  function renderFollowupsList(students) {
+    const fu = state.followUps[stuOpenClass] || {};
+    let h = '';
+    students.forEach(st => {
+      const list = fu[st.id] || [];
+      h += '<div class="fu-row"><div class="fu-head" onclick="MSH.toggleFu(\'' + esc(st.id) + '\',this)"><div class="fu-name">' + esc(st.name) + '</div><span class="fu-count">' + list.length + '</span><span style="font-size:12px;color:var(--slate-400)">▼</span></div><div class="fu-body" id="fu_' + st.id + '"><div class="fu-list">';
+      if (!list.length) h += '<div style="font-size:12px;color:var(--slate-400);padding:6px">لا توجد متابعات</div>';
+      list.forEach((x, i) => { h += '<div class="fu-item"><span>' + esc(x.text) + '</span><small>' + fmtDay(x.ts) + ' <button class="mini-btn danger" onclick="MSH.delFu(\'' + esc(st.id) + '\',' + i + ')" style="padding:0 4px;font-size:10px">🗑</button></small></div>'; });
+      h += '</div><div class="fu-input-row"><input class="form-input sm" id="fuIn_' + st.id + '" placeholder="ملاحظة متابعة..."><button class="btn btn-primary btn-sm" onclick="MSH.addFu(\'' + esc(st.id) + '\')">+</button></div></div></div>';
+    });
+    return h;
+  }
+  function renderLateList(students) {
+    let h = '<div style="background:var(--amber-100);padding:10px;border-radius:9px;margin-bottom:10px;font-size:12.5px;font-weight:700;color:var(--amber-600)">يتم احتساب تأخير الطالب من سجلات الحضور (متأخر) في الجلسات.</div>';
+    students.forEach(st => {
+      let lateCount = 0;
+      Object.keys(state.attendance[stuOpenClass] || {}).forEach(k => { if (state.attendance[stuOpenClass][k]?.[st.id]?.status === 'late') lateCount++; });
+      h += '<div class="att-row ' + (lateCount > 0 ? 'late' : '') + '"><div class="att-name">' + esc(st.name) + '</div><div class="badge amber">' + lateCount + ' تأخير</div></div>';
+    });
+    return h;
+  }
+  function renderLearningLossList(students) {
+    let h = '<div style="background:var(--red-50);padding:10px;border-radius:9px;margin-bottom:10px;font-size:12.5px;font-weight:700;color:var(--red-600)">يُحسب الفاقد التعليمي للطالب عند انخفاض درجاته عن 60% في أي مادة.</div>';
+    let hasLoss = false;
+    students.forEach(st => {
+      const yw = calcYearWork(st.id);
+      if (yw.ywPct < 60) {
+        hasLoss = true;
+        h += '<div class="att-row absent"><div class="att-name">' + esc(st.name) + '</div><div class="badge red">' + yw.ywPct + '% فاقد</div></div>';
+      }
+    });
+    if (!hasLoss) h += '<div class="empty"><p>لا يوجد طلاب لديهم فاقد تعليمي حالياً ✅</p></div>';
+    return h;
+  }
+
+  function renderCurriculumTab() {
+    let h = '<div class="sub-tabs">'
+      + '<button class="sub-tab ' + (currSubTab === 'book' ? 'active' : '') + '" onclick="MSH.setCurrSub(\'book\')">📖 الكتاب</button>'
+      + '<button class="sub-tab ' + (currSubTab === 'qiyas' ? 'active' : '') + '" onclick="MSH.setCurrSub(\'qiyas\')">📐 قياس</button>'
+      + '<button class="sub-tab ' + (currSubTab === 'styles' ? 'active' : '') + '" onclick="MSH.setCurrSub(\'styles\')">🧠 أنماط التعلم</button>'
+      + '</div>';
+    if (currSubTab === 'book') {
+      h += '<div class="card"><div class="card-title">📖 المنهج — كيمياء 3</div><div class="card-sub">13 درساً.</div><div class="empty"><div class="empty-icon">📖</div><h4>المرحلة 3</h4></div></div>';
+    } else if (currSubTab === 'qiyas') {
+      const qiyas = state.qiyas[stuOpenClass] || {};
+      const students = getStudents(stuOpenClass);
+      h += '<table class="grade-table"><thead><tr><th>#</th><th style="text-align:right">الطالب</th><th>الدرجة</th></tr></thead><tbody>';
+      students.forEach((st, i) => {
+        const v = qiyas[st.id] || '';
+        h += '<tr><td>' + (i + 1) + '</td><td class="name-cell">' + esc(st.name) + '</td><td><input class="grade-input" type="number" min="0" max="100" value="' + v + '" onchange="MSH.setQiyas(\'' + esc(st.id) + '\',this.value)"></td></tr>';
+      });
+      h += '</tbody></table>';
+    } else {
+      h += '<div class="card"><div class="card-sub">أنماط التعلم (سمعي، بصري، حركي) — سيتم تفعيلها في المراحل القادمة.</div></div>';
+    }
+    return h;
+  }
+
+  function renderPointsTab() {
+    const students = getStudents(stuOpenClass);
+    const rows = students.map(st => ({ st, beh: getBehaviorTotal(st.id) })).sort((a, b) => b.beh - a.beh);
+    let h = '';
+    rows.forEach((r, i) => {
+      const pos = i + 1;
+      const medal = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : pos;
+      h += '<div class="rank-row ' + (pos <= 3 ? 'top' + pos : '') + '"><div class="rank-pos">' + medal + '</div><div class="rank-info"><div class="rank-name">' + esc(r.st.name) + '<small>' + r.beh + ' نقطة</small></div><div class="rank-bar"><div class="rank-bar-fill" style="width:' + Math.max(0, Math.min(100, r.beh * 10)) + '%"></div></div></div><div class="rank-score">' + r.beh + '</div></div>';
+    });
+    return h;
+  }
+
+  function renderYearWorkTab() {
+    const students = getStudents(stuOpenClass);
+    let h = '<div style="background:linear-gradient(120deg,#fbbf24,#f59e0b);border-radius:14px;padding:16px;color:#fff;margin-bottom:14px"><div style="font-size:16px;font-weight:800">🏆 أعمال السنة والنهائي</div><div style="font-size:12px;opacity:.9;font-weight:700">60 درجة أعمال سنة + 40 درجة نهائي = 100</div></div>';
+    h += '<div class="yw-table"><table><thead><tr><th>#</th><th style="text-align:right">الطالب</th><th>مشاركة</th><th>واجبات</th><th>اختبارات</th><th>بحوث</th><th>أوراق عمل</th><th>نشاط</th><th>أعمال السنة (60)</th><th>النهائي (40)</th><th>المجموع (100)</th><th>التقدير</th></tr></thead><tbody>';
+    students.forEach((st, i) => {
+      const yw = calcYearWork(st.id);
+      const g = gradeLabel(yw.total);
+      h += '<tr><td>' + (i + 1) + '</td><td class="name-cell">' + esc(st.name) + '</td>';
+      h += '<td>' + (yw.part != null ? yw.part : '—') + '</td>';
+      h += '<td>' + (yw.hwPct != null ? yw.hwPct + '%' : '—') + '</td>';
+      h += '<td>' + (yw.exAvg != null ? yw.exAvg + '%' : '—') + '</td>';
+      h += '<td>' + (yw.res != null ? yw.res : '—') + '</td>';
+      h += '<td>' + (yw.ws != null ? yw.ws : '—') + '</td>';
+      h += '<td>' + yw.actPct + '%</td>';
+      h += '<td class="yw-pct">' + yw.yw + '</td>';
+      h += '<td><input class="grade-input" type="number" min="0" max="100" value="' + (yw.fe != null ? yw.fe : '') + '" onchange="MSH.setFinalExam(\'' + esc(st.id) + '\',this.value)" style="width:52px"></td>';
+      h += '<td class="yw-pct yw-total"><b>' + yw.total + '</b></td>';
+      h += '<td><span class="badge ' + g.cls + '">' + g.l + '</span></td></tr>';
+    });
+    h += '</tbody></table></div>';
+    return h;
+  }
+
+  function renderStudentsTab() {
+    const students = getStudents(stuOpenClass);
+    let h = '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap"><div style="font-weight:800;font-size:14px">👥 إدارة الطلاب (' + students.length + ')</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="MSH.addStudent()">+ إضافة طالب</button><button class="btn btn-ghost btn-sm" onclick="MSH.printCards()">🖨️ بطاقات الدخول</button></div></div>';
+    h += '<div style="overflow-x:auto"><table class="students-table"><thead><tr><th>#</th><th style="text-align:right">الاسم</th><th>الكود</th><th>المجموعة</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>';
+    students.forEach((st, i) => {
+      h += '<tr><td>' + (i + 1) + '</td><td class="name-cell">' + esc(st.name) + '</td><td><code style="font-family:monospace;font-weight:800" dir="ltr">' + esc(st.code || '—') + '</code></td><td>' + (st.group || '—') + '</td><td><span class="badge green">نشط</span></td><td class="actions"><button class="mini-btn" onclick="MSH.editStudent(\'' + esc(st.id) + '\')">✏️</button><button class="mini-btn" onclick="MSH.resetPassword(\'' + esc(st.id) + '\')">🔑</button><button class="mini-btn danger" onclick="MSH.archiveStudent(\'' + esc(st.id) + '\')">📦</button></td></tr>';
+    });
+    h += '</tbody></table></div>';
+    return h;
+  }
+
+  function setFollowupSub(s) { followupSubTab = s; renderClassContent(); }
+  function setCurrSub(s) { currSubTab = s; renderClassContent(); }
+  function setQiyas(stid, v) {
+    if (!state.qiyas[stuOpenClass]) state.qiyas[stuOpenClass] = {};
+    if (v === '') delete state.qiyas[stuOpenClass][stid];
+    else state.qiyas[stuOpenClass][stid] = Number(v);
+    save();
+  }
+  function setFinalExam(stid, v) {
+    if (!state.finalExams[stuOpenClass]) state.finalExams[stuOpenClass] = {};
+    if (v === '' || v === null) delete state.finalExams[stuOpenClass][stid];
+    else state.finalExams[stuOpenClass][stid] = { value: Math.max(0, Math.min(100, Number(v) || 0)), ts: Date.now() };
+    save(); renderClassContent();
+  }
+  function toggleFu(stid, headEl) {
+    const body = headEl.nextElementSibling;
+    if (body) body.classList.toggle('open');
+  }
+  function addFu(stid) {
+    const inp = $('fuIn_' + stid); if (!inp) return;
+    const text = inp.value.trim(); if (!text) return;
+    if (!state.followUps[stuOpenClass]) state.followUps[stuOpenClass] = {};
+    if (!state.followUps[stuOpenClass][stid]) state.followUps[stuOpenClass][stid] = [];
+    state.followUps[stuOpenClass][stid].unshift({ text, ts: Date.now() });
+    save(); renderClassContent();
+  }
+  function delFu(stid, idx) {
+    if (!state.followUps[stuOpenClass]?.[stid]) return;
+    state.followUps[stuOpenClass][stid].splice(idx, 1);
+    save(); renderClassContent();
+  }
+  function addHomework() {
+    const title = prompt('عنوان الواجب:'); if (!title) return;
+    const max = parseInt(prompt('الدرجة العظمى:', '10'), 10) || 10;
+    if (!state.homework[stuOpenClass]) state.homework[stuOpenClass] = [];
+    state.homework[stuOpenClass].push({ id: uid(), title, maxGrade: max, date: todayKey(), grades: {} });
+    save(); renderClassContent();
+  }
+  function delHomework(aid) {
+    if (!state.homework[stuOpenClass]) return;
+    if (!confirm('حذف الواجب؟')) return;
+    state.homework[stuOpenClass] = state.homework[stuOpenClass].filter(a => a.id !== aid);
+    save(); renderClassContent();
+  }
+  function addExam() {
+    const title = prompt('عنوان الاختبار:'); if (!title) return;
+    const max = parseInt(prompt('الدرجة العظمى:', '10'), 10) || 10;
+    if (!state.exams[stuOpenClass]) state.exams[stuOpenClass] = { quizzes: [], chapters: [] };
+    state.exams[stuOpenClass].quizzes.push({ id: uid(), title, maxGrade: max, date: todayKey(), grades: {} });
+    save(); renderClassContent();
+  }
+  function delExam(kind, eid) {
+    const ex = state.exams[stuOpenClass]; if (!ex) return;
+    if (!confirm('حذف الاختبار؟')) return;
+    if (kind === 'ch') ex.chapters = (ex.chapters || []).filter(x => x.id !== eid);
+    else ex.quizzes = (ex.quizzes || []).filter(x => x.id !== eid);
+    save(); renderClassContent();
+  }
+  function addStudent() {
+    const name = prompt('اسم الطالب:'); if (!name) return;
+    const students = getStudents(stuOpenClass);
+    const p = splitClass(stuOpenClass);
+    const code = (SEC_EN[p.section] || 'X') + String(students.length + 1).padStart(2, '0');
+    if (!state.classes[stuOpenClass]) state.classes[stuOpenClass] = [];
+    state.classes[stuOpenClass].push({ id: uid(), name: name.trim(), code, group: 1, status: 'active', createdAt: Date.now() });
+    save(); renderClassContent();
+  }
+  function editStudent(stid) {
+    const st = getStudents(stuOpenClass).find(x => x.id === stid); if (!st) return;
+    const name = prompt('اسم الطالب:', st.name); if (name === null) return;
+    st.name = name.trim() || st.name; save(); renderClassContent();
+  }
+  function resetPassword(stid) {
+    const st = getStudents(stuOpenClass).find(x => x.id === stid); if (!st) return;
+    toast('🔑 تم إعادة تعيين كلمة المرور للطالب ' + st.name + ' (تخيلياً)');
+  }
+  function archiveStudent(stid) {
+    const st = getStudents(stuOpenClass).find(x => x.id === stid); if (!st) return;
+    if (!confirm('أرشفة الطالب ' + st.name + '؟')) return;
+    st.status = 'archived'; save(); renderClassContent();
+  }
+  function printCards() { window.print(); }
+  function openWhiteboard() {
+    const h = '<div class="modal-head"><h3>🖊️ السبورة</h3><button class="close-x" onclick="MSH.closeOverlay()">✕</button></div>'
+      + '<div class="modal-body"><div class="wb-toolbar"><span style="font-weight:800;font-size:12px">الألوان:</span>'
+      + '<div class="wb-color active" style="background:#0f172a" onclick="MSH.wbColor(this,\'#0f172a\')"></div>'
+      + '<div class="wb-color" style="background:#dc2626" onclick="MSH.wbColor(this,\'#dc2626\')"></div>'
+      + '<div class="wb-color" style="background:#2563eb" onclick="MSH.wbColor(this,\'#2563eb\')"></div>'
+      + '<div class="wb-color" style="background:#16a34a" onclick="MSH.wbColor(this,\'#16a34a\')"></div>'
+      + '<button class="btn btn-ghost btn-sm" onclick="MSH.wbClear()" style="margin-right:auto">🧽 مسح</button></div>'
+      + '<canvas id="wbCanvas"></canvas></div>';
+    const ov = $('overlay'); ov.className = 'overlay show';
+    ov.innerHTML = '<div class="modal wb-modal">' + h + '</div>';
+    setTimeout(() => {
+      const c = $('wbCanvas'); if (!c) return;
+      const ctx = c.getContext('2d');
+      c.width = c.offsetWidth; c.height = c.offsetHeight;
+      let drawing = false, color = '#0f172a';
+      c.onmousedown = e => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+      c.onmousemove = e => { if (drawing) { ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
+      c.onmouseup = () => drawing = false;
+      c.ontouchstart = e => { drawing = true; const r = c.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); e.preventDefault(); };
+      c.ontouchmove = e => { if (drawing) { const r = c.getBoundingClientRect(); ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); ctx.stroke(); e.preventDefault(); } };
+      c.ontouchend = () => drawing = false;
+      window._wbCtx = ctx; window._wbColor = '#0f172a';
+    }, 100);
+  }
+  function wbColor(el, c) { $$('.wb-color').forEach(x => x.classList.remove('active')); el.classList.add('active'); window._wbColor = c; }
+  function wbClear() { const c = $('wbCanvas'); if (c && window._wbCtx) window._wbCtx.clearRect(0, 0, c.width, c.height); }
+  function closeOverlay() { const ov = $('overlay'); ov.classList.remove('show'); ov.innerHTML = ''; }
+
+  function renderHome() {
+    $('heroToday').textContent = fmtDay(Date.now());
+    let h = '';
+    for (let p = 1; p <= 7; p++) {
+      const ck = state.schedule?.[todayKey() + '_' + p];
+      h += '<div class="today-card ' + (ck ? 'assigned' : '') + '" onclick="' + (ck ? 'MSH.openClass(\'' + ck + '\')' : 'toast(\'لم يتم تعيين فصل لهذه الحصة\')') + '"><div class="today-num">' + p + '</div><div class="today-info"><div class="today-title">الحصة ' + p + '</div><div class="today-sub">' + (ck ? classLabel(ck) : '—') + '</div></div></div>';
+    }
+    $('todayGrid').innerHTML = h;
+    renderActivity();
+  }
+  function renderActivity() {
+    const box = $('homeActivity'); if (!box) return;
+    const list = state?.activity || [];
+    if (!list.length) { box.innerHTML = '<div class="empty"><p>لا توجد أنشطة بعد</p></div>'; return; }
+    box.innerHTML = list.slice(0, 10).map(a => '<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--slate-200);align-items:center"><div style="width:32px;height:32px;border-radius:8px;background:var(--teal-100);color:var(--teal-700);display:flex;align-items:center;justify-content:center;font-weight:800">✓</div><div style="flex:1;font-size:13px;font-weight:700">' + esc(a.text) + '</div><div style="font-size:11px;color:var(--slate-400);white-space:nowrap">' + new Date(a.ts).toLocaleTimeString('ar-SA-u-nu-latn', {hour:'numeric',minute:'2-digit'}) + '</div></div>').join('');
+  }
+
+  async function bootApp() {
+    $('loginGate').style.display = 'none';
+    $('app').classList.add('active');
+    state = loadState();
+    seedStudents();
+    updateRoleUI();
+    setupNav();
+    $('logoutBtn').onclick = doLogout;
+    const form = $('profileForm');
+    if (form) {
+      form.teacherName.value = state.profile.teacherName || '';
+      form.email.value = state.profile.email || '';
+      form.school.value = state.profile.school || '';
+      form.oninput = () => {
+        state.profile.teacherName = form.teacherName.value.trim() || 'المعلم';
+        state.profile.email = form.email.value.trim();
+        state.profile.school = form.school.value.trim();
+        $('sideName').textContent = 'أ. ' + state.profile.teacherName;
+        save();
+      };
+    }
+    $$('[data-role]').forEach(b => b.onclick = () => setRole(b.getAttribute('data-role')));
+    $('sideName').textContent = 'أ. ' + (state.profile.teacherName || 'المعلم');
+    $('sideAvatar').textContent = (state.profile.teacherName || 'ع').charAt(0);
+    $('heroName').textContent = 'أ. ' + (state.profile.teacherName || 'المعلم');
+    const startPage = (state.__currentPage && PAGES[state.__currentPage]) ? state.__currentPage : 'home';
+    navigate(startPage);
+    logActivity('تسجيل دخول');
+    console.log('✅ المرحلة 2 جاهزة');
+  }
+  function setupNav() {
+    $$('.nav-btn').forEach(btn => btn.onclick = () => navigate(btn.getAttribute('data-page')));
+    $('hamburger').onclick = () => $('sidebar').classList.toggle('open');
+  }
+  function updateRoleUI() {
+    const role = getRole(); const info = ROLES[role];
+    const chip = $('roleChip'); if (chip) { chip.textContent = info.icon + ' ' + info.label; chip.className = 'role-chip ' + (info.chip || ''); }
+    const sr = $('sideRole'); if (sr) sr.textContent = info.label;
+    $$('.nav-btn').forEach(b => { const p = b.getAttribute('data-page'); b.style.display = (role === 'lab_keeper' && p !== 'lab' && p !== 'home') ? 'none' : ''; });
+    $$('[data-role]').forEach(b => b.classList.toggle('btn-primary', b.getAttribute('data-role') === role));
+    $$('[data-role]').forEach(b => b.classList.toggle('btn-ghost', b.getAttribute('data-role') !== role));
+  }
+
+  window.MSH = {
+    openClass, closeClass, switchTab,
+    setAtt, attAll, setAttSession, beh,
+    setGradesSub, setG, fillGrade, setHw, setExam,
+    addHomework, delHomework, addExam, delExam,
+    setFollowupSub, setCurrSub, setQiyas, setFinalExam,
+    toggleFu, addFu, delFu,
+    addStudent, editStudent, resetPassword, archiveStudent,
+    printCards, openWhiteboard, wbColor, wbClear, closeOverlay
+  };
+
+  function setupLoginUI() {
+    const form = $('loginForm'), note = $('loginNote'), cfg = window.MX_CONFIG || {};
+    if (!cfg.url || !cfg.key) {
+      note.style.display = 'block';
+      note.innerHTML = hasDevicePassword() ? '🔐 <b>الخادم غير مُعدّ.</b> الدخول بكلمة مرور هذا الجهاز.' : '🔧 <b>لا خادم ولا كلمة مرور جهاز.</b> أدخل بياناتك، وأكّد تعيينها ككلمة مرور للجهاز.';
+    } else {
+      note.style.display = 'block';
+      note.innerHTML = '🟢 <b>الخادم مُعدّ.</b> الدخول بالبريد، وكلمة مرور الجهاز كبديل عند انقطاع الإنترنت.';
+    }
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = $('lgEmail').value.trim(), password = $('lgPassword').value, remember = $('lgRemember').checked;
+      const errorBox = $('loginError'), btn = $('loginBtn');
+      if (!email || !password) { errorBox.textContent = 'أدخل البريد وكلمة المرور'; return; }
+      errorBox.textContent = ''; btn.disabled = true;
+      const orig = btn.textContent; btn.innerHTML = '<span class="spinner"></span> جارٍ الدخول...';
+      try {
+        const r = await performLogin(email, password, remember);
+        if (r.ok) { if (r.firstTime) toast('🔐 تم تعيين كلمة مرور الجهاز'); await bootApp(); }
+        else errorBox.textContent = r.error || 'فشل الدخول';
+      } catch (err) { errorBox.textContent = 'خطأ: ' + (err.message || err); }
+      finally { btn.disabled = false; btn.textContent = orig || 'دخول'; }
+    });
+  }
+
+  function init() {
+    if (new URLSearchParams(location.search).has('chat') || new URLSearchParams(location.search).has('mx')) {
+      $('studentHint').style.display = 'flex';
+      $('loginGate').style.display = 'none';
+      return;
+    }
+    setupLoginUI();
+    if (isSessionValid()) {
+      bootApp().catch(e => { console.error(e); $('loginError').textContent = 'خطأ: ' + e.message; });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+</body>
+</html>
