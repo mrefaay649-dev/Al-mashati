@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>منصة المشاطي · معلم الكيمياء</title>
+<script>
+/* ============================================================
+   إعدادات Supabase — ضع هنا رابط مشروعك والمفتاح العام
+   اتركهما فارغين للعمل بوضع محلي بحت
+   ============================================================ */
+window.MX_CONFIG = {
+  url: '',   // مثال: https://xxxx.supabase.co
+  key: ''    // مثال: eyJhbGciOi...
+};
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f172a;line-height:1.6;-webkit-font-smoothing:antialiased}
+:root{
+  --teal-900:#134e4a;--teal-800:#115e59;--teal-700:#0f766e;--teal-600:#0d9488;--teal-500:#14b8a6;--teal-400:#2dd4bf;
+  --teal-100:#ccfbf1;--teal-50:#f0fdfa;
+  --slate-900:#0f172a;--slate-700:#334155;--slate-500:#64748b;--slate-400:#94a3b8;--slate-300:#cbd5e1;
+  --slate-200:#e2e8f0;--slate-100:#f1f5f9;--slate-50:#f8fafc;
+  --red-600:#dc2626;--red-500:#ef4444;--red-100:#fee2e2;--red-50:#fef2f2;
+  --amber-600:#d97706;--amber-500:#f59e0b;--amber-100:#fef3c7;
+  --green-600:#16a34a;--green-500:#22c55e;--green-100:#dcfce7;
+  --blue-500:#3b82f6;--blue-100:#dbeafe;
+}
+
+/* ===== Login Gate ===== */
+#loginGate{position:fixed;inset:0;background:radial-gradient(1200px 600px at 85% -10%,rgba(45,212,191,.35),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(99,102,241,.25),transparent 60%),linear-gradient(160deg,#042f2e,#0f3d3a 45%,#134e4a);display:flex;align-items:center;justify-content:center;padding:16px;z-index:100}
+.login-card{background:#fff;border-radius:20px;padding:32px 28px;width:100%;max-width:400px;border-top:4px solid var(--teal-500);box-shadow:0 20px 50px -20px rgba(0,0,0,.3);text-align:center}
+.login-logo{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--teal-500),var(--teal-700));display:inline-flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:12px;box-shadow:0 8px 20px -6px rgba(15,118,110,.5)}
+.login-title{font-size:24px;font-weight:800;margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--teal-700);font-weight:700;margin-bottom:24px}
+.login-form{text-align:right;display:flex;flex-direction:column;gap:12px}
+.login-form label{font-size:12.5px;font-weight:800;color:var(--slate-700)}
+.login-form input[type="text"],.login-form input[type="password"]{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--slate-200);background:var(--slate-50);font-family:inherit;font-size:14px;outline:none;transition:.15s}
+.login-form input:focus{border-color:var(--teal-500);background:#fff}
+.login-remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate-500);font-weight:700;cursor:pointer}
+.login-remember input{width:16px;height:16px;accent-color:var(--teal-600)}
+.login-btn{padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--teal-600),var(--teal-700));color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:.2s;margin-top:4px}
+.login-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 20px -6px rgba(15,118,110,.5)}
+.login-btn:disabled{opacity:.6;cursor:not-allowed}
+.login-error{color:var(--red-600);font-size:13px;font-weight:700;min-height:20px;text-align:center}
+.login-note{margin-top:16px;padding:10px 12px;background:var(--teal-50);border:1px dashed var(--teal-500);border-radius:10px;font-size:12px;color:var(--teal-800);font-weight:700;line-height:1.7;text-align:right}
+.login-note code{background:rgba(15,118,110,.1);padding:1px 6px;border-radius:4px;font-size:11px;direction:ltr;display:inline-block}
+
+/* ===== App shell ===== */
+#app{display:none;height:100vh;overflow:hidden}
+#app.active{display:flex}
+.sidebar{width:250px;background:var(--slate-900);color:#fff;display:flex;flex-direction:column;flex-shrink:0;transition:transform .3s}
+.brand{padding:20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.brand-icon{width:44px;height:44px;background:var(--teal-500);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.brand-name{font-weight:800;font-size:17px}
+.brand-sub{font-size:11px;color:var(--teal-400);font-weight:600}
+.nav{flex:1;padding:14px;overflow-y:auto}
+.nav-btn{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:transparent;border:none;color:var(--slate-400);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;text-align:right;transition:.2s;margin-bottom:4px}
+.nav-btn:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-btn.active{background:rgba(13,148,136,.25);color:#fff}
+.sidebar-foot{padding:16px;border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px}
+.sidebar-avatar{width:38px;height:38px;background:rgba(20,184,166,.25);color:var(--teal-400);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.sidebar-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-role{font-size:11px;color:var(--slate-400)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.header{height:64px;background:#fff;border-bottom:1px solid var(--slate-200);padding:0 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.hamburger{display:none;width:40px;height:40px;border-radius:10px;background:var(--slate-100);border:none;cursor:pointer;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.header-icon{width:40px;height:40px;background:var(--teal-100);color:var(--teal-600);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.header-info{min-width:0;flex:1}
+.header-title{font-weight:800;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-sub{font-size:12px;color:var(--slate-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.role-chip{padding:6px 12px;border-radius:99px;font-size:11.5px;font-weight:800;background:var(--teal-100);color:var(--teal-800);white-space:nowrap;flex-shrink:0}
+.role-chip.viewer{background:var(--blue-100);color:#1e40af}
+.role-chip.lab_keeper{background:var(--amber-100);color:var(--amber-600)}
+.save-indicator{padding:7px 14px;border-radius:99px;font-size:12px;font-weight:800;background:var(--slate-100);color:var(--slate-500);display:flex;align-items:center;gap:6px;transition:.2s;white-space:nowrap;flex-shrink:0}
+.save-indicator.saving{background:var(--amber-100);color:var(--amber-600)}
+.save-indicator.saved{background:var(--green-100);color:var(--green-600)}
+.btn-logout{padding:7px 14px;border-radius:99px;font-size:12.5px;font-weight:800;background:#fff;color:var(--slate-500);border:1px solid var(--slate-200);cursor:pointer;font-family:inherit;transition:.2s;display:inline-flex;align-items:center;gap:6px;flex-shrink:0}
+.btn-logout:hover{background:var(--red-50);color:var(--red-600);border-color:#fecaca}
+.content{flex:1;overflow-y:auto;padding:22px}
+.page{display:none}
+.page.active{display:block}
+.card{background:#fff;border:1px solid var(--slate-200);border-radius:14px;padding:20px;margin-bottom:16px}
+.card-title{font-size:16px;font-weight:800;margin-bottom:4px}
+.card-sub{font-size:12.5px;color:var(--slate-500);margin-bottom:16px}
+.hero{border-radius:18px;padding:28px;color:#fff;margin-bottom:20px}
+.placeholder{text-align:center;padding:60px 24px;color:var(--slate-400)}
+.placeholder-icon{font-size:56px;margin-bottom:16px;opacity:.6}
+.placeholder h3{font-size:18px;font-weight:800;color:var(--slate-500);margin-bottom:8px}
+.placeholder p{font-size:13.5px;line-height:1.8;max-width:420px;margin:0 auto}
+.phase-badge{display:inline-block;margin-top:16px;padding:4px 12px;border-radius:99px;background:var(--teal-100);color:var(--teal-800);font-size:11.5px;font-weight:800}
+.form-input{width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--slate-200);background:var(--slate-50);outline:none;font-size:14px;font-family:inherit;transition:.15s}
+.form-input:focus{border-color:var(--teal-500);background:#fff}
+.btn-role{padding:10px 16px;border-radius:10px;border:1.5px solid var(--slate-200);background:#fff;font-family:inherit;font-size:13px;font-weight:800;color:var(--slate-500);cursor:pointer;transition:.15s}
+.btn-role:hover{border-color:var(--teal-500);color:var(--teal-700)}
+.btn-role.active{background:var(--teal-600);color:#fff;border-color:var(--teal-600)}
+
+/* ===== Toast ===== */
+.toast{position:fixed;bottom:22px;left:22px;background:var(--slate-900);color:#fff;padding:13px 22px;border-radius:12px;font-weight:700;font-size:13.5px;z-index:3000;transform:translateY(120px);opacity:0;transition:.3s;max-width:calc(100vw - 44px)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ===== Spinner ===== */
+.spinner{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== Student hint placeholder ===== */
+#studentHint{display:none;position:fixed;inset:0;z-index:50;background:linear-gradient(160deg,#042f2e,#0f3d3a);align-items:center;justify-content:center;padding:24px;color:#fff;text-align:center}
+#studentHint.show{display:flex}
+#studentHint .box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:36px 28px;max-width:420px}
+#studentHint h2{font-size:22px;font-weight:800;margin-bottom:10px}
+#studentHint p{font-size:14px;line-height:1.9;color:#cbd5e1}
+#studentHint code{background:rgba(255,255,255,.1);padding:2px 8px;border-radius:6px;font-size:12px;direction:ltr;display:inline-block}
+
+/* ===== Mobile ===== */
+@media (max-width:900px){
+  .sidebar{position:fixed;right:0;top:0;bottom:0;transform:translateX(100%);z-index:500;width:260px}
+  .sidebar.open{transform:translateX(0);box-shadow:-8px 0 30px rgba(0,0,0,.25)}
+  .hamburger{display:flex}
+  .header-icon{display:none}
+  .header{padding:0 12px;gap:8px}
+  .header-title{font-size:15px}
+  .header-sub{display:none}
+  .role-chip{display:none}
+  .btn-logout span{display:none}
+  .content{padding:14px}
+  .save-indicator{padding:6px 10px;font-size:11px}
+  .save-text-long{display:none}
+  .save-text-short{display:inline!important}
+}
+@media (max-width:480px){
+  .login-card{padding:24px 20px}
+  .login-title{font-size:20px}
+  .login-logo{width:60px;height:60px;font-size:30px}
+  .header-title{font-size:14px}
+}
+</style>
+</head>
+<body>
+
+<!-- ========== LOGIN GATE ========== -->
+<div id="loginGate">
+  <div class="login-card">
+    <div class="login-logo">⚗️</div>
+    <div class="login-title">منصة المشاطي</div>
+    <div class="login-sub">⚗️ الكيمياء · تعلّم · تفاعل · تميّز</div>
+    <form class="login-form" id="loginForm" autocomplete="on">
+      <label for="lgEmail">البريد الإلكتروني أو اسم المستخدم</label>
+      <input id="lgEmail" type="text" dir="ltr" autocomplete="username" placeholder="teacher@example.com">
+      <label for="lgPassword">كلمة المرور</label>
+      <input id="lgPassword" type="password" dir="ltr" autocomplete="current-password" placeholder="••••••••">
+      <label class="login-remember">
+        <input type="checkbox" id="lgRemember"> تذكرني على هذا الجهاز لمدة 30 يوماً
+      </label>
+      <button class="login-btn" id="loginBtn" type="submit">دخول</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+    <div class="login-note" id="loginNote" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ========== STUDENT HINT (placeholder for Phase 5) ========== -->
+<div id="studentHint">
+  <div class="box">
+    <div style="font-size:52px;margin-bottom:12px">🎓</div>
+    <h2>واجهة الطالب</h2>
+    <p>ستُبنى واجهة الطالب (الاختبارات الإلكترونية، الرسائل، وإشعارات الدرجات) في المرحلة الخامسة.</p>
+    <p style="margin-top:14px;font-size:12px;color:#94a3b8">تُفتح عبر <code>?chat=1</code> أو <code>?mx=</code></p>
+  </div>
+</div>
+
+<!-- ========== MAIN APP ========== -->
+<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🎓</div>
+      <div>
+        <div class="brand-name">منصة المشاطي</div>
+        <div class="brand-sub">معلم الكيمياء</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-page="home">🏠 الرئيسية</button>
+      <button class="nav-btn" data-page="classes">👥 الفصول والطلاب</button>
+      <button class="nav-btn" data-page="education">📖 المنهج</button>
+      <button class="nav-btn" data-page="lab">🧪 مختبري</button>
+      <button class="nav-btn" data-page="portfolio">🏅 ملف الإنجاز</button>
+      <button class="nav-btn" data-page="reports">📊 التقارير</button>
+      <button class="nav-btn" data-page="messages">💬 الرسائل</button>
+      <button class="nav-btn" data-page="settings">⚙️ الإعدادات</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-avatar" id="sideAvatar">ع</div>
+      <div style="min-width:0;flex:1">
+        <div class="sidebar-name" id="sideName">أ. عبدالله الفيفي</div>
+        <div class="sidebar-role" id="sideRole">مدير النظام</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="header">
+      <button class="hamburger" id="hamburger" aria-label="القائمة">☰</button>
+      <div class="header-icon">⚗️</div>
+      <div class="header-info">
+        <div class="header-title" id="pageTitle">الرئيسية</div>
+        <div class="header-sub" id="pageSub">لوحة التحكم</div>
+      </div>
+      <span class="role-chip" id="roleChip">🛡️ مدير النظام</span>
+      <div class="save-indicator" id="saveIndicator">
+        <span class="save-text-long">الحفظ التلقائي مُفعّل</span>
+        <span class="save-text-short" style="display:none">تلقائي</span>
+      </div>
+      <button class="btn-logout" id="logoutBtn" title="تسجيل الخروج">🚪<span>خروج</span></button>
+    </header>
+
+    <div class="content">
+      <!-- HOME -->
+      <div class="page active" id="page-home">
+        <div class="hero" style="background:linear-gradient(120deg,#0f766e,#14b8a6)">
+          <div style="font-size:22px;font-weight:800;margin-bottom:8px">أهلاً، <span id="heroName">أ. عبدالله الفيفي</span> 👋</div>
+          <div style="opacity:.9;font-size:14px">منصة إدارة معلم الكيمياء · <span id="heroToday">—</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📅 مسار اليوم</div>
+          <div class="card-sub" id="heroTodaySub">—</div>
+          <div class="placeholder" style="padding:30px 20px">
+            <div class="placeholder-icon">🚧</div>
+            <h3>مسار اليوم قيد الإنشاء</h3>
+            <p>سيُبنى مسار اليوم (الحصص، أوقاتها، والانتقال السريع للحضور والدرس) في المرحلة الثانية.</p>
+            <span class="phase-badge">المرحلة 2</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">آخر الأنشطة</div>
+          <div id="homeActivity" class="placeholder" style="padding:20px"><p>لا توجد أنشطة بعد</p></div>
+        </div>
+      </div>
+
+      <!-- CLASSES -->
+      <div class="page" id="page-classes">
+        <div class="placeholder">
+          <div class="placeholder-icon">👥</div>
+          <h3>الفصول والطلاب</h3>
+          <p>ستُبنى قائمة الفصول والشاشة الموحّدة للفصل (الحضور، المجموعات، الواجبات، الاختبارات، السلوك، المتابعات، الكتاب، قياس، أنماط التعلم، المتأخرون، الفاقد، السبورة، النقاط، الترتيب، أعمال السنة، إدارة الطلاب) في المرحلة الثانية.</p>
+          <span class="phase-badge">المرحلة 2</span>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="page" id="page-education">
+        <div class="placeholder">
+          <div class="placeholder-icon">📖</div>
+          <h3>المنهج</h3>
+          <p>ستُبنى الدروس الـ13 المستقلة، المعالجة الذكية للمنهج، بنك الأسئلة، منشئ الدروس حسب «العقد»، والاختبارات الإلكترونية في المرحلة الثالثة.</p>
+          <span class="phase-badge">المرحلة 3</span>
+        </div>
+      </div>
+
+      <!-- LAB -->
+      <div class="page" id="page-lab">
+        <div class="placeholder">
+          <div class="placeholder-icon">🧪</div>
+          <h3>مختبري</h3>
+          <p>ستُبنى الخطط الفصلية، التجارب والمعدات، لوحة الإحصاءات، سجل التدقيق، تلميحات الرموز (فأرة ولمس)، ولوحة محضّر المختبر في المرحلة الرابعة.</p>
+          <span class="phase-badge">المرحلة 4</span>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO -->
+      <div class="page" id="page-portfolio">
+        <div class="placeholder">
+          <div class="placeholder-icon">🏅</div>
+          <h3>ملف الإنجاز</h3>
+          <p>ستُبنى الشهادات، السيرة الذاتية، وشواهد الأداء الوظيفي (11 معياراً) في المرحلة الرابعة.</p>
+          <span class="phase-badge">المرحلة 4</span>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="page" id="page-reports">
+        <div class="placeholder">
+          <div class="placeholder-icon">📊</div>
+          <h3>التقارير</h3>
+          <p>ستُبنى التقارير العامة وتقارير أولياء الأمور (إرسال واتساب وطباعة آمنة) في المرحلة الرابعة.</p>
+          <span class="phase-badge">المرحلة 4</span>
+        </div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="page" id="page-messages">
+        <div class="placeholder">
+          <div class="placeholder-icon">💬</div>
+          <h3>الرسائل</h3>
+          <p>ستُبنى الدردشة الداخلية بين المعلم والطلاب، الإرسال للمجموعة أو لطالب أو للجميع، وإشعارات الدرجات في المرحلة الخامسة.</p>
+          <span class="phase-badge">المرحلة 5</span>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="card">
+          <div class="card-title">⚙️ الإعدادات</div>
+          <div class="card-sub">تبويبات المرحلة السادسة: الحساب، الفصول، الطلبة، الجدول، المنهج، الإتقان، إعدادات مختبري، الرسائل، الحسابات والصلاحيات، فحص حالة النظام، النسخ الاحتياطي.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">بيانات المعلم</div>
+          <form id="profileForm" style="display:grid;gap:12px;margin-top:12px">
+            <div>
+              <label style="font-size:12.5px;font-weight:800;color:var(--slate-700);display:block;margin-bottom:6px">الاسم</label>
+              <input name="teacherName" class="form-input">
+            </div>
+            <div>
+              <label style="font-size:12.5px;font-weight:800;color:var(--slate-700);display:block;margin-bottom:6px">البريد</label>
+              <input name="email" class="form-input" dir="ltr">
+            </div>
+            <div>
+              <label style="font-size:12.5px;font-weight:800;color:var(--slate-700);display:block;margin-bottom:6px">المدرسة</label>
+              <input name="school" class="form-input">
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-title">الدور الحالي على هذا الجهاز</div>
+          <div class="card-sub">يتغيّر عبر تسجيل الخروج ثم الدخول بحساب آخر. للاختبار في المرحلة الأولى يمكنك التبديل يدوياً:</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button class="btn-role" data-role="admin">🛡️ مدير النظام</button>
+            <button class="btn-role" data-role="viewer">👁️ مشاهد شامل</button>
+            <button class="btn-role" data-role="lab_keeper">🧪 محضّر مختبر</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==========================================================================
+   منصة المشاطي — المرحلة 1: البنية، الدخول، الأدوار، والتخزين
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  /* ---------------- Constants ---------------- */
+  const STORAGE_KEY   = 'mashati_v1';
+  const SESSION_KEY   = 'mashati_auth';
+  const REMEMBER_KEY  = 'mashati_auth_t';
+  const ROLE_KEY      = 'mashati_role';
+  const PW_KEY        = 'mashati_tpw';
+  const SESSION_LIFE  = 30 * 86400000;
+  const APP_VERSION   = '1.0.0-phase1';
+
+  const ROLES = {
+    admin:      { label: 'مدير النظام', icon: '🛡️', chip: '' },
+    viewer:     { label: 'مشاهد شامل', icon: '👁️', chip: 'viewer' },
+    lab_keeper: { label: 'محضّر مختبر', icon: '🧪', chip: 'lab_keeper' }
+  };
+
+  const PAGES = {
+    home:      { title: 'الرئيسية',       sub: 'لوحة التحكم' },
+    classes:   { title: 'الفصول والطلاب', sub: 'إدارة الفصول والطلاب' },
+    education: { title: 'المنهج',         sub: 'دروس الكيمياء 3 والعرض البصري' },
+    lab:       { title: 'مختبري',         sub: 'الخطط الفصلية والتجارب' },
+    portfolio: { title: 'ملف الإنجاز',   sub: 'الشهادات والسيرة الذاتية' },
+    reports:   { title: 'التقارير',       sub: 'تقارير شاملة وأولياء الأمور' },
+    messages:  { title: 'الرسائل',       sub: 'المراسلة مع الطلاب والمجموعات' },
+    settings:  { title: 'الإعدادات',     sub: 'إعدادات المنصة' }
+  };
+
+  const $ = id => document.getElementById(id);
+  const $$ = sel => document.querySelectorAll(sel);
+
+  /* ---------------- Utilities ---------------- */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+      { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
+    ));
+  }
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+  function fmtDay(ts) {
+    try {
+      return new Date(ts).toLocaleDateString('ar-SA-u-nu-latn-ca-gregory', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+    } catch (e) { return '—'; }
+  }
+  function fmtTime(ts) {
+    try {
+      return new Date(ts).toLocaleTimeString('ar-SA-u-nu-latn', { hour: 'numeric', minute: '2-digit' });
+    } catch (e) { return '—'; }
+  }
+
+  /* ---------------- Toast ---------------- */
+  let toastTimer = null;
+  function toast(msg, ms) {
+    const t = $('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), ms || 2600);
+  }
+
+  /* ---------------- Crypto ---------------- */
+  async function sha256(text) {
+    const s = String(text);
+    if (!(window.crypto && crypto.subtle)) {
+      // Fallback for file:// — not cryptographic, but stable
+      let h = 5381;
+      for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+      return 'fallback:' + Math.abs(h).toString(16);
+    }
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(buf)).map(x => ('0' + x.toString(16)).slice(-2)).join('');
+  }
+
+  function randomSalt() {
+    if (window.crypto && crypto.getRandomValues) {
+      const a = new Uint8Array(16);
+      crypto.getRandomValues(a);
+      return Array.from(a).map(x => ('0' + x.toString(16)).slice(-2)).join('');
+    }
+    return Math.random().toString(36).slice(2) + Date.now().toString(36);
+  }
+
+  /* ---------------- State ---------------- */
+  function defaultState() {
+    return {
+      __version: APP_VERSION,
+      __createdAt: Date.now(),
+      __updatedAt: Date.now(),
+      profile: {
+        teacherName: 'عبدالله الفيفي',
+        email: '',
+        school: '',
+        subject: 'كيمياء 3'
+      },
+      settings: {
+        masteryThreshold: 85,
+        sessionQuestions: 10,
+        lessonMinutes: 45,
+        periodStarts: ['07:00','07:50','08:40','09:30','10:20','11:10','12:00']
+      },
+      classes: {},
+      sections: { g12_s1: ['أ','ب','ج','د','ه'] },
+      curriculum: {},
+      attendance: {},
+      studentGrades: {},
+      homework: {},
+      exams: {},
+      behavior: {},
+      followUps: {},
+      labPlans: {},
+      labEquipment: [],
+      labAudit: [],
+      portfolio: { certificates: [], cv: {}, evidence: [] },
+      messages: { threads: [], broadcasts: [], readState: {} },
+      activity: [],
+      __meta: { phase: 1 }
+    };
+  }
+
+  let state = null;
+  let saveTimer = null;
+  let dirty = false;
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      return Object.assign(defaultState(), parsed);
+    } catch (e) {
+      console.warn('State load failed, using defaults:', e);
+      return defaultState();
+    }
+  }
+
+  function persistState() {
+    try {
+      state.__updatedAt = Date.now();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      return true;
+    } catch (e) {
+      console.error('State save failed:', e);
+      toast('⚠️ تعذّر الحفظ المحلي — المساحة قد تكون ممتلئة');
+      return false;
+    }
+  }
+
+  function save() {
+    dirty = true;
+    const ind = $('saveIndicator');
+    if (ind) {
+      ind.classList.remove('saved');
+      ind.classList.add('saving');
+      ind.innerHTML = '<span class="save-text-long">جارٍ الحفظ...</span><span class="save-text-short">...</span>';
+    }
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      if (persistState()) {
+        dirty = false;
+        if (ind) {
+          ind.classList.remove('saving');
+          ind.classList.add('saved');
+          ind.innerHTML = '<span class="save-text-long">✓ تم الحفظ</span><span class="save-text-short">✓</span>';
+          setTimeout(() => {
+            if (!dirty && ind) {
+              ind.classList.remove('saved');
+              ind.innerHTML = '<span class="save-text-long">الحفظ التلقائي مُفعّل</span><span class="save-text-short">تلقائي</span>';
+            }
+          }, 1800);
+        }
+      }
+    }, 300);
+  }
+
+  function flushSave() {
+    if (saveTimer) {
+      clearTimeout(saveTimer);
+      saveTimer = null;
+      if (dirty) persistState();
+    }
+  }
+  window.addEventListener('pagehide', flushSave);
+  window.addEventListener('beforeunload', flushSave);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushSave();
+  });
+
+  function logActivity(text) {
+    if (!state.activity) state.activity = [];
+    state.activity.unshift({ id: uid(), text, ts: Date.now() });
+    if (state.activity.length > 50) state.activity.length = 50;
+    save();
+    renderActivity();
+  }
+
+  function renderActivity() {
+    const box = $('homeActivity');
+    if (!box) return;
+    const list = (state && state.activity) || [];
+    if (!list.length) {
+      box.className = 'placeholder';
+      box.style.padding = '20px';
+      box.innerHTML = '<p>لا توجد أنشطة بعد</p>';
+      return;
+    }
+    box.className = '';
+    box.style.padding = '0';
+    box.innerHTML = list.slice(0, 10).map(a => (
+      '<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--slate-200);align-items:center">'
+      + '<div style="width:32px;height:32px;border-radius:8px;background:var(--teal-100);color:var(--teal-700);display:flex;align-items:center;justify-content:center;font-weight:800">✓</div>'
+      + '<div style="flex:1;font-size:13px;font-weight:700">' + esc(a.text) + '</div>'
+      + '<div style="font-size:11px;color:var(--slate-400);white-space:nowrap">' + fmtTime(a.ts) + '</div>'
+      + '</div>'
+    )).join('');
+  }
+
+  /* ---------------- Roles ---------------- */
+  function getRole() {
+    try {
+      const r = localStorage.getItem(ROLE_KEY);
+      return ROLES[r] ? r : 'admin';
+    } catch (e) { return 'admin'; }
+  }
+
+  function setRole(role) {
+    if (!ROLES[role]) return;
+    try { localStorage.setItem(ROLE_KEY, role); } catch (e) {}
+    updateRoleUI();
+    toast('👤 الدور الحالي: ' + ROLES[role].label);
+    logActivity('تبديل الدور إلى ' + ROLES[role].label);
+    // If current page is not accessible, go home
+    if (role === 'lab_keeper' && state && state.__currentPage
+        && state.__currentPage !== 'lab' && state.__currentPage !== 'home') {
+      navigate('home');
+    }
+  }
+
+  function can(action, section) {
+    const role = getRole();
+    if (role === 'admin') return true;
+    if (role === 'viewer') return ['view','print','report','export'].includes(action);
+    if (role === 'lab_keeper') {
+      if (action === 'view' || action === 'print') return section === 'lab' || section === 'home';
+      return section === 'lab';
+    }
+    return false;
+  }
+
+  function updateRoleUI() {
+    const role = getRole();
+    const info = ROLES[role];
+    const chip = $('roleChip');
+    if (chip) {
+      chip.textContent = info.icon + ' ' + info.label;
+      chip.className = 'role-chip ' + (info.chip || '');
+    }
+    const sideRole = $('sideRole');
+    if (sideRole) sideRole.textContent = info.label;
+
+    $$('.nav-btn').forEach(btn => {
+      const p = btn.getAttribute('data-page');
+      btn.style.display = (role === 'lab_keeper' && p !== 'lab' && p !== 'home') ? 'none' : '';
+    });
+    $$('.btn-role').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-role') === role);
+    });
+  }
+
+  /* ---------------- Auth ---------------- */
+  function isSessionValid() {
+    try {
+      if (sessionStorage.getItem(SESSION_KEY) === 't') return true;
+      const exp = parseInt(localStorage.getItem(REMEMBER_KEY) || '0', 10);
+      return exp > Date.now();
+    } catch (e) { return false; }
+  }
+
+  function markAuthenticated(remember) {
+    try {
+      sessionStorage.setItem(SESSION_KEY, 't');
+      if (remember) localStorage.setItem(REMEMBER_KEY, String(Date.now() + SESSION_LIFE));
+      else localStorage.removeItem(REMEMBER_KEY);
+    } catch (e) {}
+  }
+
+  function clearAuth() {
+    try {
+      sessionStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(REMEMBER_KEY);
+    } catch (e) {}
+  }
+
+  function hasDevicePassword() {
+    try {
+      const raw = localStorage.getItem(PW_KEY);
+      return !!(raw && JSON.parse(raw).hash);
+    } catch (e) { return false; }
+  }
+
+  async function setDevicePassword(pw) {
+    const salt = randomSalt();
+    const hash = await sha256(salt + ':' + pw);
+    try {
+      localStorage.setItem(PW_KEY, JSON.stringify({ salt, hash, at: Date.now() }));
+      return true;
+    } catch (e) { return false; }
+  }
+
+  async function checkDevicePassword(pw) {
+    try {
+      const raw = localStorage.getItem(PW_KEY);
+      if (!raw) return null;
+      const { salt, hash } = JSON.parse(raw);
+      if (!salt || !hash) return null;
+      const h = await sha256(salt + ':' + pw);
+      return h === hash;
+    } catch (e) { return false; }
+  }
+
+  async function tryServerLogin(email, password) {
+    const cfg = window.MX_CONFIG || {};
+    if (!cfg.url || !cfg.key) return { ok: false, reason: 'not_configured' };
+    try {
+      const res = await fetch(String(cfg.url).replace(/\/+$/, '') + '/auth/v1/token?grant_type=password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': cfg.key },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.access_token) {
+        return { ok: false, reason: 'bad_credentials', detail: data.error_description || data.msg || '' };
+      }
+      try {
+        localStorage.setItem('mashati_mx_session', JSON.stringify({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token,
+          exp: Date.now() + ((data.expires_in || 3600) - 60) * 1000,
+          uid: data.user && data.user.id,
+          email: data.user && data.user.email
+        }));
+      } catch (e) {}
+      return { ok: true, user: data.user };
+    } catch (e) {
+      return { ok: false, reason: 'network', detail: e.message };
+    }
+  }
+
+  async function performLogin(email, password, remember) {
+    // 1. Try server
+    const serverResult = await tryServerLogin(email, password);
+    if (serverResult.ok) {
+      markAuthenticated(remember);
+      await setDevicePassword(password);
+      return { ok: true };
+    }
+
+    // 2. Try device password
+    const deviceCheck = await checkDevicePassword(password);
+    if (deviceCheck === true) {
+      markAuthenticated(remember);
+      return { ok: true };
+    }
+
+    // 3. First-time setup only if server is NOT configured OR unreachable
+    //    (never allow bypassing when server explicitly rejects credentials)
+    if (deviceCheck === null) {
+      if (serverResult.reason === 'bad_credentials') {
+        return { ok: false, error: 'البريد أو كلمة المرور غير صحيحة' };
+      }
+      const confirmed = confirm(
+        '🔐 لم تُعيَّن كلمة مرور للجهاز بعد.\n\n' +
+        'هل تريد تعيين كلمة المرور التي أدخلتها الآن (' + password.length + ' حرف) ككلمة مرور لهذا الجهاز؟\n\n' +
+        '• ستُستخدم للدخول دون اتصال بالخادم.\n' +
+        '• من يملك هذا الجهاز سيمكنه الدخول بها.'
+      );
+      if (confirmed) {
+        await setDevicePassword(password);
+        markAuthenticated(remember);
+        return { ok: true, firstTime: true };
+      }
+      return { ok: false, error: 'تم إلغاء تعيين كلمة مرور الجهاز' };
+    }
+
+    // 4. Failure
+    if (serverResult.reason === 'network') {
+      return { ok: false, error: 'تعذّر الاتصال بالخادم — تحقق من الإنترنت، أو استخدم كلمة مرور الجهاز' };
+    }
+    if (serverResult.reason === 'not_configured') {
+      return { ok: false, error: 'الخادم غير مُعدّ — استخدم كلمة مرور الجهاز (أو عيّن واحدة)' };
+    }
+    return { ok: false, error: 'البريد أو كلمة المرور غير صحيحة' };
+  }
+
+  /* ---------------- Login UI ---------------- */
+  function setupLoginUI() {
+    const form = $('loginForm');
+    const note = $('loginNote');
+    const cfg = window.MX_CONFIG || {};
+
+    if (!cfg.url || !cfg.key) {
+      note.style.display = 'block';
+      if (hasDevicePassword()) {
+        note.innerHTML = '🔐 <b>الخادم غير مُعدّ.</b> الدخول بكلمة مرور هذا الجهاز فقط (مُعيَّنة مسبقاً).';
+      } else {
+        note.innerHTML = '🔧 <b>الخادم غير مُعدّ، ولا توجد كلمة مرور للجهاز بعد.</b><br>أدخل بريدك وكلمة المرور، ثم أكّد تعيينها ككلمة مرور للجهاز في المرة الأولى.';
+      }
+    } else {
+      note.style.display = 'block';
+      note.innerHTML = '🟢 <b>الخادم مُعدّ.</b> الدخول بالبريد عبر Supabase أولاً، وكلمة مرور الجهاز كبديل عند انقطاع الإنترنت.';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = $('lgEmail').value.trim();
+      const password = $('lgPassword').value;
+      const remember = $('lgRemember').checked;
+      const errorBox = $('loginError');
+      const btn = $('loginBtn');
+
+      if (!email || !password) {
+        errorBox.textContent = 'أدخل البريد وكلمة المرور';
+        return;
+      }
+
+      errorBox.textContent = '';
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.innerHTML = '<span class="spinner"></span> جارٍ الدخول...';
+
+      try {
+        const result = await performLogin(email, password, remember);
+        if (result.ok) {
+          if (result.firstTime) toast('🔐 تم تعيين كلمة مرور الجهاز');
+          await bootApp();
+        } else {
+          errorBox.textContent = result.error || 'فشل الدخول';
+        }
+      } catch (err) {
+        errorBox.textContent = 'خطأ: ' + (err.message || err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText || 'دخول';
+      }
+    });
+  }
+
+  function doLogout() {
+    if (!confirm('تسجيل الخروج من هذا الجهاز؟')) return;
+    clearAuth();
+    flushSave();
+    toast('👋 تم تسجيل الخروج');
+    setTimeout(() => location.reload(), 300);
+  }
+
+  /* ---------------- Navigation ---------------- */
+  function navigate(page) {
+    const role = getRole();
+    if (role === 'lab_keeper' && page !== 'lab' && page !== 'home') {
+      toast('🔒 دور محضّر المختبر: الوصول إلى مختبري فقط');
+      return;
+    }
+    if (!PAGES[page]) page = 'home';
+
+    if (state) { state.__currentPage = page; save(); }
+
+    $$('.nav-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-page') === page));
+    $$('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
+
+    const info = PAGES[page];
+    $('pageTitle').textContent = info.title;
+    $('pageSub').textContent = info.sub;
+
+    if (window.innerWidth < 900) $('sidebar').classList.remove('open');
+    const content = document.querySelector('.content');
+    if (content) content.scrollTop = 0;
+  }
+  window.mashatiNavigate = navigate;
+
+  /* ---------------- Boot ---------------- */
+  async function bootApp() {
+    $('loginGate').style.display = 'none';
+    $('app').classList.add('active');
+
+    state = loadState();
+
+    updateProfileUI();
+    updateRoleUI();
+    setupNav();
+    setupLogout();
+    setupProfileForm();
+    setupRoleButtons();
+    updateHomeUI();
+    renderActivity();
+
+    const startPage = (state.__currentPage && PAGES[state.__currentPage]) ? state.__currentPage : 'home';
+    navigate(startPage);
+
+    logActivity('تسجيل دخول — ' + ROLES[getRole()].label);
+
+    console.log('%c✅ منصة المشاطي — المرحلة 1 جاهزة', 'color:#0f766e;font-weight:bold;font-size:14px');
+    console.log('   التخزين: localStorage["' + STORAGE_KEY + '"]');
+    console.log('   الدور الحالي:', getRole());
+    console.log('   الخادم:', (window.MX_CONFIG && window.MX_CONFIG.url ? 'مُعدّ' : 'غير مُعدّ'));
+  }
+
+  /* ---------------- UI helpers ---------------- */
+  function updateProfileUI() {
+    const p = (state && state.profile) || {};
+    const rawName = p.teacherName || 'المعلم';
+    const display = rawName.startsWith('أ.') ? rawName : 'أ. ' + rawName;
+    const avatar = (rawName.replace(/^أ\.?\s*/, '').charAt(0) || 'ع').toUpperCase();
+
+    $('sideName').textContent = display;
+    $('sideAvatar').textContent = avatar;
+    $('heroName').textContent = display;
+  }
+
+  function updateHomeUI() {
+    $('heroToday').textContent = fmtDay(Date.now());
+    $('heroTodaySub').textContent = 'اليوم: ' + fmtDay(Date.now());
+  }
+
+  function setupNav() {
+    $$('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => navigate(btn.getAttribute('data-page')));
+    });
+    $('hamburger').addEventListener('click', () => $('sidebar').classList.toggle('open'));
+  }
+
+  function setupLogout() {
+    $('logoutBtn').addEventListener('click', doLogout);
+  }
+
+  function setupProfileForm() {
+    const form = $('profileForm');
+    if (!form) return;
+    const p = state.profile || {};
+    form.teacherName.value = p.teacherName || '';
+    form.email.value = p.email || '';
+    form.school.value = p.school || '';
+    form.addEventListener('input', () => {
+      state.profile.teacherName = form.teacherName.value.trim() || 'المعلم';
+      state.profile.email = form.email.value.trim();
+      state.profile.school = form.school.value.trim();
+      updateProfileUI();
+      save();
+    });
+  }
+
+  function setupRoleButtons() {
+    $$('.btn-role').forEach(b => {
+      b.addEventListener('click', () => setRole(b.getAttribute('data-role')));
+    });
+  }
+
+  /* ---------------- Student mode (?chat=1 / ?mx=) ---------------- */
+  function checkStudentMode() {
+    const params = new URLSearchParams(location.search);
+    if (params.has('chat') || params.has('mx')) {
+      $('studentHint').classList.add('show');
+      $('loginGate').style.display = 'none';
+      return true;
+    }
+    return false;
+  }
+
+  /* ---------------- Init ---------------- */
+  function init() {
+    if (checkStudentMode()) {
+      console.log('%c🎓 وضع الطالب — قيد الإنشاء (المرحلة 5)', 'color:#7c3aed;font-weight:bold');
+      return;
+    }
+
+    setupLoginUI();
+
+    if (isSessionValid()) {
+      bootApp().catch(e => {
+        console.error('Boot failed:', e);
+        $('loginError').textContent = 'خطأ في التحميل: ' + e.message;
+      });
+    } else {
+      setTimeout(() => { const f = $('lgEmail'); if (f) f.focus(); }, 100);
+    }
+
+    console.log('%c🔧 منصة المشاطي — المرحلة 1', 'color:#0f766e;font-weight:bold;font-size:14px');
+    console.log('   في انتظار تسجيل الدخول...');
+  }
+
+  /* ---------------- Debug API ---------------- */
+  window.mashatiDebug = {
+    state: () => state,
+    role: getRole,
+    setRole,
+    hasDevicePassword,
+    clearAuth: () => { clearAuth(); location.reload(); },
+    resetDevicePassword: () => {
+      if (confirm('حذف كلمة مرور هذا الجهاز؟ ستحتاج لتعيينها من جديد عند الدخول التالي.')) {
+        localStorage.removeItem(PW_KEY);
+        toast('🗑️ تم حذف كلمة مرور الجهاز');
+      }
+    },
+    dump: () => { const s = loadState(); console.log(s); return s; },
+    saveNow: () => { if (state) persistState(); }
+  };
+
+  /* ---------------- Start ---------------- */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>
