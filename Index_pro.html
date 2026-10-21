@@ -150,7 +150,6 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
 #wbCanvas{width:100%;height:420px;background:#fff;border:2px solid var(--s-200);border-radius:10px;touch-action:none;display:block}
 .wb-toolbar{display:flex;gap:6px;flex-wrap:wrap;padding:10px;background:var(--s-50);border-radius:10px;margin-bottom:8px;align-items:center}
 .wb-color{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:.15s}.wb-color.active{border-color:var(--s-900);transform:scale(1.1)}
-/* Phase 3 & 4 Additions */
 .chapter-card{background:#fff;border:1px solid var(--s-200);border-radius:14px;overflow:hidden;margin-bottom:14px}
 .chapter-head{padding:14px 16px;background:var(--t-50);border-bottom:1px solid var(--s-200);display:flex;align-items:center;gap:12px}
 .chapter-num{width:42px;height:42px;background:linear-gradient(135deg,var(--t-500),var(--t-700));color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}
@@ -183,11 +182,37 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
 .cert-preview .title{font-size:26px;font-weight:800;color:#92400e;margin-bottom:10px}
 .cert-preview .name{font-size:32px;font-weight:800;color:#0f172a;background:linear-gradient(135deg,#fef3c7,#fde68a);padding:12px 24px;border-radius:12px;display:inline-block;margin:16px 0;border:2px solid #f59e0b}
 .wa-btn{background:#25D366;color:#fff;border-radius:8px;padding:8px 14px;font-weight:800;font-size:13px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-@media (max-width:900px){.sidebar{position:fixed;right:0;top:0;bottom:0;transform:translateX(100%);z-index:500;width:260px}.sidebar.open{transform:translateX(0);box-shadow:-8px 0 30px rgba(0,0,0,.25)}.hamburger{display:flex}.header-icon{display:none}.header{padding:0 12px;gap:8px}.header-title{font-size:15px}.header-sub{display:none}.role-chip{display:none}.btn-logout span{display:none}.content{padding:14px}.class-tabs{overflow-x:auto}.class-tab-btn{padding:9px 12px;font-size:12px}.class-content{padding:12px}.grade-table{font-size:11.5px}.grade-table thead th,.grade-table tbody td{padding:6px 4px}.grade-input{width:52px;padding:4px 6px;font-size:12px}#wbCanvas{height:300px}.q-opts{grid-template-columns:1fr}.today-grid{grid-template-columns:1fr}.classes-grid{grid-template-columns:1fr}}
+/* Chat Styles */
+.chat-layout{display:flex;height:calc(100vh - 150px);background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--s-200)}
+.chat-sidebar{width:280px;border-left:1px solid var(--s-200);display:flex;flex-direction:column;background:var(--s-50)}
+.chat-sidebar-head{padding:14px;border-bottom:1px solid var(--s-200);font-weight:800;background:#fff}
+.chat-list{flex:1;overflow-y:auto}
+.chat-item{padding:12px 14px;border-bottom:1px solid var(--s-200);cursor:pointer;display:flex;align-items:center;gap:10px}
+.chat-item:hover,.chat-item.active{background:#fff;border-right:3px solid var(--t-500)}
+.chat-avatar{width:36px;height:36px;border-radius:50%;background:var(--t-100);color:var(--t-700);display:flex;align-items:center;justify-content:center;font-weight:800}
+.chat-main{flex:1;display:flex;flex-direction:column;background:#f1f5f9}
+.chat-header{padding:14px 20px;background:#fff;border-bottom:1px solid var(--s-200);font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.chat-messages{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.msg-bubble{max-width:70%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.6;position:relative}
+.msg-bubble.me{align-self:flex-start;background:var(--t-600);color:#fff;border-bottom-right-radius:4px}
+.msg-bubble.them{align-self:flex-end;background:#fff;border:1px solid var(--s-200);border-bottom-left-radius:4px}
+.msg-time{font-size:10px;opacity:.7;margin-top:4px;text-align:left;display:block}
+.chat-input{padding:14px;background:#fff;border-top:1px solid var(--s-200);display:flex;gap:10px}
+.chat-input input{flex:1;padding:12px;border-radius:99px;border:1px solid var(--s-200);outline:none;font-family:inherit}
+.chat-input button{width:44px;height:44px;border-radius:50%;background:var(--t-600);color:#fff;border:none;cursor:pointer;font-size:18px}
+/* Student Interface */
+#studentApp{display:none;flex-direction:column;height:100vh;background:#f1f5f9}
+.stu-header{background:var(--s-900);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.stu-tabs{display:flex;background:#fff;border-bottom:1px solid var(--s-200)}
+.stu-tab-btn{flex:1;padding:14px;text-align:center;font-weight:800;color:var(--s-500);cursor:pointer;border-bottom:3px solid transparent}
+.stu-tab-btn.active{color:var(--t-600);border-bottom-color:var(--t-600)}
+.stu-content{flex:1;overflow-y:auto;padding:16px}
+@media (max-width:900px){.sidebar{position:fixed;right:0;top:0;bottom:0;transform:translateX(100%);z-index:500;width:260px}.sidebar.open{transform:translateX(0);box-shadow:-8px 0 30px rgba(0,0,0,.25)}.hamburger{display:flex}.header-icon{display:none}.header{padding:0 12px;gap:8px}.header-title{font-size:15px}.header-sub{display:none}.role-chip{display:none}.btn-logout span{display:none}.content{padding:14px}.class-tabs{overflow-x:auto}.class-tab-btn{padding:9px 12px;font-size:12px}.class-content{padding:12px}.grade-table{font-size:11.5px}.grade-table thead th,.grade-table tbody td{padding:6px 4px}.grade-input{width:52px;padding:4px 6px;font-size:12px}#wbCanvas{height:300px}.q-opts{grid-template-columns:1fr}.today-grid{grid-template-columns:1fr}.classes-grid{grid-template-columns:1fr}.chat-layout{flex-direction:column}.chat-sidebar{width:100%;height:200px}.chat-main{flex:1}}
 </style>
 </head>
 <body>
 
+<!-- ========== TEACHER LOGIN ========== -->
 <div id="loginGate">
   <div class="login-card">
     <div class="login-logo">⚗️</div>
@@ -206,14 +231,21 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
   </div>
 </div>
 
-<div id="studentHint" style="display:none;position:fixed;inset:0;z-index:50;background:linear-gradient(160deg,#042f2e,#0f3d3a);align-items:center;justify-content:center;padding:24px;color:#fff;text-align:center">
-  <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:36px 28px;max-width:420px">
-    <div style="font-size:52px;margin-bottom:12px">🎓</div>
-    <h2 style="font-size:22px;font-weight:800;margin-bottom:10px">واجهة الطالب</h2>
-    <p style="font-size:14px;line-height:1.9;color:#cbd5e1">ستُبنى في المرحلة الخامسة.</p>
+<!-- ========== STUDENT APP (?chat=1) ========== -->
+<div id="studentApp">
+  <div class="stu-header">
+    <div><div style="font-size:18px;font-weight:800">🎓 منصة الطالب</div><div style="font-size:12px;opacity:.8" id="stuName">—</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="location.href=location.pathname">خروج</button>
   </div>
+  <div class="stu-tabs">
+    <div class="stu-tab-btn active" onclick="MSH.stuSwitchTab('chat')">💬 الرسائل</div>
+    <div class="stu-tab-btn" onclick="MSH.stuSwitchTab('exams')">📝 الاختبارات</div>
+    <div class="stu-tab-btn" onclick="MSH.stuSwitchTab('grades')">📊 الدرجات</div>
+  </div>
+  <div class="stu-content" id="stuContent"></div>
 </div>
 
+<!-- ========== TEACHER APP ========== -->
 <div id="app">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><div class="brand-icon">🎓</div><div><div class="brand-name">منصة المشاطي</div><div class="brand-sub">معلم الكيمياء</div></div></div>
@@ -264,7 +296,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
         <div id="reportsView"></div>
       </div>
       <div class="page" id="page-messages">
-        <div class="card"><div class="card-title">💬 الرسائل</div><div class="empty"><div class="empty-icon">💬</div><h4>المرحلة 5</h4></div></div>
+        <div id="msgView"></div>
       </div>
       <div class="page" id="page-settings">
         <div class="card"><div class="card-title">⚙️ الإعدادات</div><div class="card-sub">قيد الإنشاء.</div></div>
@@ -275,6 +307,11 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
             <div class="field"><label>البريد</label><input name="email" class="form-input" dir="ltr"></div>
             <div class="field"><label>المدرسة</label><input name="school" class="form-input"></div>
           </form>
+        </div>
+        <div class="card">
+          <div class="card-title">قاعدة بيانات Supabase</div>
+          <div class="card-sub">انسخ ملف الإعداد إلى SQL Editor في مشروع Supabase.</div>
+          <button class="btn btn-primary" onclick="MSH.downloadSQL()">⬇️ تحميل ملف SQL</button>
         </div>
       </div>
     </div>
@@ -342,7 +379,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
 
   function defaultState() {
     return {
-      __version: '4.0.0-phase4', __createdAt: Date.now(), __updatedAt: Date.now(),
+      __version: '5.0.0-phase5', __createdAt: Date.now(), __updatedAt: Date.now(),
       profile: { teacherName: 'عبدالله الفيفي', email: '', school: '', subject: 'كيمياء 3' },
       settings: { periodStarts: ['07:00','07:50','08:40','09:30','10:20','11:10','12:00'] },
       classes: {}, sections: { g12_s1: SEC_LETTERS.slice() },
@@ -352,7 +389,8 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
       schedule: {}, activity: [],
       labPlans: [], labEquipment: [], labAudit: [],
       portfolio: { certificates: [], cv: { name: '', email: '', school: '', degree: '', major: '', experience: '' }, evidence: [] },
-      __meta: { phase: 4 }
+      messages: [], // { id, studentId, sender: 'teacher'|'student', text, ts }
+      __meta: { phase: 5 }
     };
   }
   let state = null;
@@ -532,6 +570,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
     else if (page === 'lab') renderLab();
     else if (page === 'portfolio') renderPortfolio();
     else if (page === 'reports') renderReports();
+    else if (page === 'messages') renderMessages();
     else if (page === 'settings') { const form = $('profileForm'); if (form && state) { form.teacherName.value = state.profile.teacherName || ''; form.email.value = state.profile.email || ''; form.school.value = state.profile.school || ''; } updateRoleUI(); }
     const c = document.querySelector('.content'); if (c) c.scrollTop = 0;
   }
@@ -637,7 +676,6 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
     const curr = state.curriculum[CURR_KEY] || [];
     let h = `<div style="background:var(--r-50);padding:10px;border-radius:9px;margin-bottom:12px;font-size:12.5px;font-weight:700;color:var(--r-600)">يتم احتساب الفاقد التعليمي تلقائياً إذا سجلت الطالب "غائباً" في جلسة مرتبطة بدرس معين.</div>`;
     
-    // Calculate loss
     const losses = {};
     Object.keys(state.attendance[stuOpenClass] || {}).forEach(dateKey => {
       const session = state.attendance[stuOpenClass][dateKey];
@@ -654,7 +692,6 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
     curr.forEach(ch => {
       ch.lessons.forEach(l => {
         const lossSet = losses[l.code] || new Set();
-        // Add manual overrides if any
         if (state.learningLoss[stuOpenClass]?.[l.code]) {
           Object.keys(state.learningLoss[stuOpenClass][l.code]).forEach(stid => {
             if (state.learningLoss[stuOpenClass][l.code][stid]) lossSet.add(stid);
@@ -682,7 +719,6 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
     save(); renderClassContent();
   }
 
-  /* ========== Grades & Rest ========== */
   function renderGradesTab() {
     const students = getStudents(stuOpenClass); if (!students.length) return '<div class="empty"><h4>لا يوجد طلاب</h4></div>';
     let h = '<div class="sub-tabs">';
@@ -798,7 +834,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
   function resetPassword(stid) { toast('🔑 تم إعادة تعيين كلمة المرور (محاكاة)'); }
   function archiveStudent(stid) { const st = getStudents(stuOpenClass).find(x => x.id === stid); if (!st) return; if (!confirm('أرشفة ' + st.name + '؟')) return; st.status = 'archived'; save(); renderClassContent(); }
 
-  /* ========== Phase 3: Curriculum ========== */
+  /* ========== Curriculum ========== */
   function renderEduList() {
     eduView = 'list';
     const view = $('eduView');
@@ -900,7 +936,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
   function nextSlide(code) { slideIdx++; renderSlide(code); }
   function prevSlide(code) { slideIdx--; renderSlide(code); }
 
-  /* ========== Phase 4: Lab ========== */
+  /* ========== Lab ========== */
   function renderLab() {
     const view = $('labView');
     let h = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div><div class="card-title" style="margin:0">🧪 مختبري</div><div class="card-sub" style="margin:2px 0 0">إدارة الخطط والتجارب والمعدات</div></div></div>`;
@@ -909,7 +945,6 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
       <button class="sub-tab ${labTab==='equipment'?'active':''}" onclick="MSH.setLabTab('equipment')">🔬 المعدات</button>
       <button class="sub-tab ${labTab==='audit'?'active':''}" onclick="MSH.setLabTab('audit')">📝 سجل التدقيق</button>
     </div>`;
-    
     if (labTab === 'plans') {
       h += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-weight:800">خطط التجارب</div><button class="btn btn-primary btn-sm" onclick="MSH.addLabPlan()">+ إضافة خطة</button></div>`;
       if (!state.labPlans.length) h += '<div class="empty"><h4>لا توجد خطط</h4></div>';
@@ -949,7 +984,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
   }
   function delEquipment(i) { if (!confirm('حذف؟')) return; state.labAudit.push({ action: `حذف معدة: ${state.labEquipment[i].name}`, ts: Date.now() }); state.labEquipment.splice(i, 1); save(); renderLab(); }
 
-  /* ========== Phase 4: Portfolio ========== */
+  /* ========== Portfolio ========== */
   function renderPortfolio() {
     const view = $('portfolioView');
     let h = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div><div class="card-title" style="margin:0">🏅 ملف الإنجاز</div><div class="card-sub" style="margin:2px 0 0">الشهادات والسيرة الذاتية</div></div></div>`;
@@ -958,13 +993,13 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
       <button class="sub-tab ${portTab==='cv'?'active':''}" onclick="MSH.setPortTab('cv')">📄 السيرة الذاتية</button>
       <button class="sub-tab ${portTab==='evidence'?'active':''}" onclick="MSH.setPortTab('evidence')">📌 شواهد الأداء (11)</button>
     </div>`;
-    
     if (portTab === 'certificates') {
       h += `<div style="font-weight:800;margin-bottom:10px">شهادات التميز (للطلاب الحاصلين على 90%+)</div>`;
       let found = false;
       allClassKeys().forEach(ck => {
         getStudents(ck).forEach(st => {
-          const yw = calcYearWork(st.id);
+          let oldClass = stuOpenClass; stuOpenClass = ck;
+          const yw = calcYearWork(st.id); stuOpenClass = oldClass;
           if (yw.total >= 90) {
             found = true;
             h += `<div class="lab-card"><div><div class="lab-title">${esc(st.name)}</div><div class="lab-meta">شعبة ${splitClass(ck).section} · ${yw.total}%</div></div><button class="btn btn-primary btn-sm" onclick="MSH.showCert('${ck}','${st.id}')">🖨️ طباعة</button></div>`;
@@ -993,4 +1028,297 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f
     const st = getStudents(ck).find(x => x.id === stid);
     let oldClass = stuOpenClass; stuOpenClass = ck;
     const yw = calcYearWork(stid); stuOpenClass = oldClass;
-    const h = `<div class="cert-preview"><div class="title">شهادة شكر وتقدير</div><div style="font-size:14px;color:#78350f">تُمنح هذه الشهادة للطالب</div><div class="name">${esc(st.name)}</div><div style="font-size:14px;color:#78350f">لحصوله على نسبة <b>${yw.total}%</b> في مادة الكيمياء<br>شعبة ${splitClass(ck).section}</div><div style="margin-top:30px;font-size:14px;font-weight:800">
+    const h = `<div class="cert-preview"><div class="title">شهادة شكر وتقدير</div><div style="font-size:14px;color:#78350f">تُمنح هذه الشهادة للطالب</div><div class="name">${esc(st.name)}</div><div style="font-size:14px;color:#78350f">لحصوله على نسبة <b>${yw.total}%</b> في مادة الكيمياء<br>شعبة ${splitClass(ck).section}</div><div style="margin-top:30px;font-size:14px;font-weight:800">معلم المادة: أ. ${esc(state.profile.teacherName)}</div></div>`;
+    openModal('🏅 معاينة الشهادة', h, `<button class="btn btn-primary" onclick="window.print()">🖨️ طباعة</button>`);
+  }
+  function saveCV() {
+    state.portfolio.cv = {
+      name: $('cv_name').value, email: $('cv_email').value, school: $('cv_school').value,
+      degree: $('cv_degree').value, major: $('cv_major').value, experience: $('cv_experience').value
+    };
+    save(); toast('💾 تم حفظ السيرة الذاتية');
+  }
+  function addEvidence(idx) {
+    const note = prompt('اكتب الشاهد أو الإنجاز لهذا المعيار:');
+    if (!note) return;
+    if (!state.portfolio.evidence) state.portfolio.evidence = [];
+    state.portfolio.evidence = state.portfolio.evidence.filter(x => x.idx !== idx);
+    state.portfolio.evidence.push({ idx, note });
+    save(); renderPortfolio(); toast('✅ تم إضافة الشاهد');
+  }
+
+  /* ========== Reports ========== */
+  function renderReports() {
+    const view = $('reportsView');
+    let h = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div><div class="card-title" style="margin:0">📊 التقارير</div><div class="card-sub" style="margin:2px 0 0">تقارير الفصول وأولياء الأمور</div></div></div>`;
+    h += `<div class="sub-tabs">
+      <button class="sub-tab ${repTab==='general'?'active':''}" onclick="MSH.setRepTab('general')">📈 تقرير عام</button>
+      <button class="sub-tab ${repTab==='parents'?'active':''}" onclick="MSH.setRepTab('parents')">👨‍👩‍👦 تقارير أولياء الأمور</button>
+    </div>`;
+    if (repTab === 'general') {
+      let totalStudents = 0;
+      allClassKeys().forEach(ck => totalStudents += getStudents(ck).length);
+      h += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px">
+               font-weight:800;color:var(--t-600)">${totalStudents}</div><div style="font-size:12px;font-weight:700;color:var(--s-500)">إجمالي الطلاب</div></div>
+        <div class="card" style="text-align:center"><div style="font-size:28px;font-weight:800;color:var(--v-500)">${allClassKeys().length}</div><div style="font-size:12px;font-weight:700;color:var(--s-500)">عدد الشعب</div></div>
+        <div class="card" style="text-align:center"><div style="font-size:28px;font-weight:800;color:var(--g-600)">${Object.keys(state.questionBank).length}</div><div style="font-size:12px;font-weight:700;color:var(--s-500)">دروس بها أسئلة</div></div>
+      </div>`;
+      
+      h += `<div style="font-weight:800;margin-bottom:10px">أداء الفصول</div>`;
+      allClassKeys().forEach(ck => {
+        const sts = getStudents(ck);
+        let oldClass = stuOpenClass; stuOpenClass = ck;
+        let total = 0; sts.forEach(st => total += calcYearWork(st.id).total);
+        stuOpenClass = oldClass;
+        const avg = sts.length ? Math.round(total / sts.length) : 0;
+        h += `<div class="lab-card"><div><div class="lab-title">شعبة ${splitClass(ck).section}</div><div class="lab-meta">${sts.length} طالب</div></div><div style="font-size:18px;font-weight:800;color:var(--t-600)">${avg}%</div></div>`;
+      });
+    } else {
+      const ck = allClassKeys()[0];
+      const sts = getStudents(ck);
+      h += `<div class="card"><div class="card-sub">اختر طالباً لتوليد تقرير ولي الأمر</div><select class="form-input" id="waStudent" onchange="MSH.generateParentReport(this.value)"><option value="">— اختر طالباً —</option>`;
+      sts.forEach(st => h += `<option value="${st.id}">${esc(st.name)}</option>`);
+      h += `</select><div id="waReportBox" style="margin-top:20px;display:none"></div></div>`;
+    }
+    view.innerHTML = h;
+  }
+  function setRepTab(t) { repTab = t; renderReports(); }
+  function generateParentReport(stid) {
+    if (!stid) return $('waReportBox').style.display = 'none';
+    const ck = allClassKeys()[0];
+    const st = getStudents(ck).find(x => x.id === stid);
+    let oldClass = stuOpenClass; stuOpenClass = ck;
+    const yw = calcYearWork(stid); stuOpenClass = oldClass;
+    const msg = `السلام عليكم ورحمة الله وبركاته\nولي أمر الطالب: ${st.name}\nنود إعلامكم بأن مستوى الطالب في مادة الكيمياء حتى الآن:\n- أعمال السنة: ${yw.yw} من 60\n- المجموع الكلي: ${yw.total}%\n\nنشكر لكم تعاونكم.\nمعلم المادة: ${state.profile.teacherName}`;
+    const box = $('waReportBox');
+    box.style.display = 'block';
+    box.innerHTML = `<div style="background:var(--s-50);border:1px solid var(--s-200);padding:16px;border-radius:10px;white-space:pre-wrap;font-family:monospace;font-size:13px;margin-bottom:12px">${esc(msg)}</div>
+    <div style="display:flex;gap:8px"><a href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" class="wa-btn" style="text-decoration:none">💬 إرسال عبر واتساب</a><button class="btn btn-primary" onclick="window.print()">🖨️ طباعة</button></div>`;
+  }
+
+  /* ========== Phase 5: Messages (Teacher) ========== */
+  let activeChatStudent = null;
+  function getAllStudentsForChat() {
+    let arr = [];
+    allClassKeys().forEach(ck => { getStudents(ck).forEach(st => arr.push({ ...st, ck })); });
+    return arr;
+  }
+  function renderMessages() {
+    const view = $('msgView');
+    const students = getAllStudentsForChat();
+    let h = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div><div class="card-title" style="margin:0">💬 الرسائل</div><div class="card-sub" style="margin:2px 0 0">مراسلة الطلاب وأولياء الأمور</div></div></div>`;
+    h += `<div class="chat-layout"><div class="chat-sidebar"><div class="chat-sidebar-head">الطلاب (${students.length})</div><div class="chat-list">`;
+    students.forEach(st => {
+      h += `<div class="chat-item ${activeChatStudent === st.id ? 'active' : ''}" onclick="MSH.openChat('${st.id}')"><div class="chat-avatar">${esc(st.name.charAt(0))}</div><div><div style="font-weight:800;font-size:13px">${esc(st.name)}</div><div style="font-size:11px;color:var(--s-500)">شعبة ${splitClass(st.ck).section}</div></div></div>`;
+    });
+    h += `</div></div><div class="chat-main">`;
+    if (!activeChatStudent) {
+      h += `<div class="empty" style="margin:auto"><div class="empty-icon">💬</div><h4>اختر طالباً لبدء المحادثة</h4></div>`;
+    } else {
+      const st = students.find(x => x.id === activeChatStudent);
+      const msgs = state.messages.filter(m => m.studentId === activeChatStudent).sort((a, b) => a.ts - b.ts);
+      h += `<div class="chat-header"><div>${esc(st.name)}</div><button class="btn btn-ghost btn-sm" onclick="MSH.clearChat()">🗑 مسح</button></div><div class="chat-messages" id="chatMsgs">`;
+      msgs.forEach(m => {
+        h += `<div class="msg-bubble ${m.sender === 'teacher' ? 'me' : 'them'}">${esc(m.text)}<span class="msg-time">${new Date(m.ts).toLocaleTimeString('ar-SA-u-nu-latn', {hour:'numeric',minute:'2-digit'})}</span></div>`;
+      });
+      h += `</div><div class="chat-input"><input id="chatIn" placeholder="اكتب رسالة..." onkeydown="if(event.key==='Enter')MSH.sendMsg()"><button onclick="MSH.sendMsg()">➤</button></div>`;
+    }
+    h += `</div></div>`;
+    view.innerHTML = h;
+    const mBox = $('chatMsgs'); if (mBox) mBox.scrollTop = mBox.scrollHeight;
+  }
+  function openChat(stid) { activeChatStudent = stid; renderMessages(); }
+  function sendMsg() {
+    const inp = $('chatIn'); if (!inp || !inp.value.trim()) return;
+    state.messages.push({ id: uid(), studentId: activeChatStudent, sender: 'teacher', text: inp.value.trim(), ts: Date.now() });
+    save(); renderMessages();
+  }
+  function clearChat() {
+    if (!confirm('مسح المحادثة؟')) return;
+    state.messages = state.messages.filter(m => m.studentId !== activeChatStudent);
+    save(); renderMessages();
+  }
+
+  /* ========== Phase 5: Student App (?chat=1) ========== */
+  let stuAppUser = null, stuAppTab = 'chat';
+  function initStudentApp() {
+    if (new URLSearchParams(location.search).has('chat')) {
+      $('loginGate').style.display = 'none';
+      $('app').style.display = 'none';
+      $('studentApp').style.display = 'flex';
+      const code = prompt('أدخل كود الطالب (مثال: A01):');
+      if (!code) return location.href = location.pathname;
+      let found = null;
+      allClassKeys().forEach(ck => { const s = getStudents(ck).find(x => x.code.toUpperCase() === code.toUpperCase()); if (s) found = { ...s, ck }; });
+      if (!found) { alert('الكود غير صحيح'); return location.href = location.pathname; }
+      stuAppUser = found;
+      $('stuName').textContent = found.name + ' — شعبة ' + splitClass(found.ck).section;
+      renderStudentApp();
+    }
+  }
+  function stuSwitchTab(t) {
+    stuAppTab = t;
+    $$('.stu-tab-btn').forEach((b, i) => b.classList.toggle('active', ['chat','exams','grades'][i] === t));
+    renderStudentApp();
+  }
+  function renderStudentApp() {
+    const c = $('stuContent');
+    if (stuAppTab === 'chat') {
+      const msgs = state.messages.filter(m => m.studentId === stuAppUser.id).sort((a, b) => a.ts - b.ts);
+      c.innerHTML = `<div style="display:flex;flex-direction:column;height:100%"><div class="chat-messages" id="stuChatBox" style="flex:1;background:#fff;border-radius:12px;border:1px solid var(--s-200);margin-bottom:10px">` +
+        (msgs.length ? msgs.map(m => `<div class="msg-bubble ${m.sender === 'student' ? 'me' : 'them'}">${esc(m.text)}<span class="msg-time">${new Date(m.ts).toLocaleTimeString('ar-SA-u-nu-latn')}</span></div>`).join('') : '<div class="empty"><p>لا توجد رسائل بعد</p></div>') +
+        `</div><div class="chat-input"><input id="stuChatIn" placeholder="اكتب للمعلم..." onkeydown="if(event.key==='Enter')MSH.stuSendMsg()"><button onclick="MSH.stuSendMsg()">➤</button></div></div>`;
+      const b = $('stuChatBox'); if (b) b.scrollTop = b.scrollHeight;
+    } else if (stuAppTab === 'exams') {
+      const ex = state.exams[stuAppUser.ck]?.electronic || [];
+      c.innerHTML = `<div class="card"><div class="card-title">📝 الاختبارات الإلكترونية</div>` +
+        (ex.length ? ex.map(e => {
+          const done = e.results?.[stuAppUser.id];
+          return `<div class="lab-card" style="margin-bottom:10px"><div><div class="lab-title">${esc(e.title)}</div><div class="lab-meta">${e.questions.length} سؤال · ${e.duration} دقيقة</div></div>${done ? `<span class="badge green">${done.score}/${done.total}</span>` : `<button class="btn btn-primary btn-sm" onclick="MSH.stuStartExam('${e.id}')">دخول</button>`}</div>`;
+        }).join('') : '<div class="empty"><p>لا توجد اختبارات متاحة</p></div>') + `</div>`;
+    } else {
+      let oldClass = stuOpenClass; stuOpenClass = stuAppUser.ck;
+      const yw = calcYearWork(stuAppUser.id); stuOpenClass = oldClass;
+      c.innerHTML = `<div class="card"><div class="card-title">📊 درجاتي</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">
+          <div class="lab-card" style="flex-direction:column;align-items:flex-start"><div class="lab-title" style="color:var(--t-600);font-size:24px">${yw.yw}</div><div class="lab-meta">أعمال السنة (60)</div></div>
+          <div class="lab-card" style="flex-direction:column;align-items:flex-start"><div class="lab-title" style="color:var(--g-600);font-size:24px">${yw.total}</div><div class="lab-meta">المجموع الكلي</div></div>
+        </div>
+      </div>`;
+    }
+  }
+  function stuSendMsg() {
+    const inp = $('stuChatIn'); if (!inp || !inp.value.trim()) return;
+    state.messages.push({ id: uid(), studentId: stuAppUser.id, sender: 'student', text: inp.value.trim(), ts: Date.now() });
+    save(); renderStudentApp();
+  }
+  function stuStartExam(eid) {
+    const ex = state.exams[stuAppUser.ck].electronic.find(x => x.id === eid);
+    let score = 0;
+    ex.questions.forEach(q => {
+      const ans = prompt(`${q.text}\n\n${q.options.map((o, i) => `${i+1}) ${o}`).join('\n')}\n\nأدخل رقم الإجابة (1-4):`);
+      if (ans && parseInt(ans) - 1 === q.correct) score++;
+    });
+    if (!ex.results) ex.results = {};
+    ex.results[stuAppUser.id] = { score, total: ex.questions.length };
+    
+    // Push to grades
+    let oldClass = stuOpenClass; stuOpenClass = stuAppUser.ck;
+    if (!state.exams[stuOpenClass].quizzes) state.exams[stuOpenClass].quizzes = [];
+    state.exams[stuOpenClass].quizzes.push({ id: uid(), title: ex.title + ' (إلكتروني)', maxGrade: ex.questions.length, date: todayKey(), grades: { [stuAppUser.id]: { value: score, ts: Date.now() } } });
+    stuOpenClass = oldClass;
+    
+    save(); renderStudentApp(); toast('✅ تم تسليم الاختبار');
+  }
+
+  /* ========== Utilities & Overlays ========== */
+  function openModal(title, body, footer) {
+    const ov = $('overlay');
+    ov.className = 'overlay show';
+    ov.innerHTML = `<div class="modal"><div class="modal-head"><h3>${title}</h3><button class="close-x" onclick="MSH.closeOverlay()">✕</button></div><div class="modal-body">${body}</div><div class="modal-foot">${footer} <button class="btn btn-ghost" onclick="MSH.closeOverlay()">إلغاء</button></div></div>`;
+  }
+  function closeOverlay() { const ov = $('overlay'); ov.classList.remove('show'); ov.innerHTML = ''; }
+
+  function openWhiteboard() {
+    const h = `<div class="modal-head"><h3>🖊️ السبورة</h3><button class="close-x" onclick="MSH.closeOverlay()">✕</button></div><div class="modal-body"><div class="wb-toolbar"><span style="font-weight:800;font-size:12px">الألوان:</span><div class="wb-color active" style="background:#0f172a" onclick="MSH.wbColor(this,'#0f172a')"></div><div class="wb-color" style="background:#dc2626" onclick="MSH.wbColor(this,'#dc2626')"></div><div class="wb-color" style="background:#2563eb" onclick="MSH.wbColor(this,'#2563eb')"></div><div class="wb-color" style="background:#16a34a" onclick="MSH.wbColor(this,'#16a34a')"></div><button class="btn btn-ghost btn-sm" onclick="MSH.wbClear()" style="margin-right:auto">🧽 مسح</button></div><canvas id="wbCanvas"></canvas></div>`;
+    const ov = $('overlay'); ov.className = 'overlay show'; ov.innerHTML = `<div class="modal wb-modal" style="max-width:900px">${h}</div>`;
+    setTimeout(() => {
+      const c = $('wbCanvas'); if (!c) return;
+      const ctx = c.getContext('2d'); c.width = c.offsetWidth; c.height = c.offsetHeight;
+      let drawing = false, color = '#0f172a';
+      c.onmousedown = e => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+      c.onmousemove = e => { if (drawing) { ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
+      c.onmouseup = () => drawing = false;
+      c.ontouchstart = e => { drawing = true; const r = c.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); e.preventDefault(); };
+      c.ontouchmove = e => { if (drawing) { const r = c.getBoundingClientRect(); ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); ctx.stroke(); e.preventDefault(); } };
+      c.ontouchend = () => drawing = false;
+      window._wbCtx = ctx;
+    }, 100);
+  }
+  function wbColor(el, c) { $$('.wb-color').forEach(x => x.classList.remove('active')); el.classList.add('active'); window._wbColor = c; }
+  function wbClear() { const c = $('wbCanvas'); if (c && window._wbCtx) window._wbCtx.clearRect(0, 0, c.width, c.height); }
+
+  function downloadSQL() {
+    const sql = `-- منصة المشاطي — ملف إعداد قاعدة البيانات (Supabase)\n-- قم بلصق هذا الكود في SQL Editor داخل مشروعك في Supabase\n\ncreate table if not exists mashati_state (\n  id uuid primary key default gen_random_uuid(),\n  teacher_email text unique not null,\n  data jsonb not null,\n  updated_at timestamp with time zone default timezone('utc'::text, now()) not null\n);\n\ncreate table if not exists mashati_messages (\n  id uuid primary key default gen_random_uuid(),\n  teacher_email text not null,\n  student_code text not null,\n  sender text not null check (sender in ('teacher', 'student')),\n  text text not null,\n  created_at timestamp with time zone default timezone('utc'::text, now()) not null\n);\n\nalter table mashati_state enable row level security;\nalter table mashati_messages enable row level security;\n\ncreate policy "Allow auth read/write state" on mashati_state for all using (true);\ncreate policy "Allow auth read/write messages" on mashati_messages for all using (true);\n`;
+    const blob = new Blob([sql], { type: 'text/plain' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'mashati_supabase.sql';
+    document.body.appendChild(a); a.click(); a.remove();
+    toast('⬇️ تم تحميل ملف SQL');
+  }
+
+  /* ========== Init & Login ========== */
+  window.MSH = {
+    openClass, closeClass, switchTab,
+    setAtt, attAll, setAttSession, beh, setAttLesson, toggleLoss,
+    setGradesSub, setG, fillGrade, setHw, setExam,
+    addHomework, delHomework, addExam, delExam,
+    setFinalExam, addStudent, editStudent, resetPassword, archiveStudent,
+    openWhiteboard, wbColor, wbClear, closeOverlay,
+    openLesson, closeLesson, setEduTab, addQuestionModal, saveQuestion, importQuestionsModal, processImport, generateLesson, playLesson, nextSlide, prevSlide,
+    setLabTab, addLabPlan, delLabPlan, addEquipment, delEquipment,
+    setPortTab, showCert, saveCV, addEvidence,
+    setRepTab, generateParentReport,
+    openChat, sendMsg, clearChat, stuSwitchTab, stuSendMsg, stuStartExam,
+    downloadSQL
+  };
+
+  function setupLoginUI() {
+    const form = $('loginForm'), note = $('loginNote'), cfg = window.MX_CONFIG || {};
+    if (!cfg.url || !cfg.key) {
+      note.style.display = 'block';
+      note.innerHTML = hasDevicePassword() ? '🔐 <b>الخادم غير مُعدّ.</b> الدخول بكلمة مرور هذا الجهاز.' : '🔧 <b>لا خادم ولا كلمة مرور جهاز.</b> أدخل بياناتك، وأكّد تعيينها ككلمة مرور للجهاز.';
+    } else {
+      note.style.display = 'block';
+      note.innerHTML = '🟢 <b>الخادم مُعدّ.</b> الدخول بالبريد، وكلمة مرور الجهاز كبديل.';
+    }
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = $('lgEmail').value.trim(), password = $('lgPassword').value, remember = $('lgRemember').checked;
+      const errorBox = $('loginError'), btn = $('loginBtn');
+      if (!email || !password) { errorBox.textContent = 'أدخل البريد وكلمة المرور'; return; }
+      errorBox.textContent = ''; btn.disabled = true;
+      const orig = btn.textContent; btn.innerHTML = '<span class="spinner"></span> جارٍ الدخول...';
+      try {
+        const r = await performLogin(email, password, remember);
+        if (r.ok) { if (r.firstTime) toast('🔐 تم تعيين كلمة مرور الجهاز'); await bootApp(); }
+        else errorBox.textContent = r.error || 'فشل الدخول';
+      } catch (err) { errorBox.textContent = 'خطأ: ' + (err.message || err); }
+      finally { btn.disabled = false; btn.textContent = orig || 'دخول'; }
+    });
+  }
+
+  async function bootApp() {
+    $('loginGate').style.display = 'none';
+    $('app').classList.add('active');
+    state = loadState(); seedStudents();
+    updateRoleUI();
+    $('hamburger').onclick = () => $('sidebar').classList.toggle('open');
+    $('logoutBtn').onclick = () => { if (!confirm('تسجيل الخروج؟')) return; clearAuth(); flushSave(); setTimeout(() => location.reload(), 300); };
+    $$('.nav-btn').forEach(btn => btn.onclick = () => navigate(btn.getAttribute('data-page')));
+    const form = $('profileForm');
+    if (form) {
+      form.teacherName.value = state.profile.teacherName || ''; form.email.value = state.profile.email || ''; form.school.value = state.profile.school || '';
+      form.oninput = () => { state.profile.teacherName = form.teacherName.value.trim() || 'المعلم'; state.profile.email = form.email.value.trim(); state.profile.school = form.school.value.trim(); $('sideName').textContent = 'أ. ' + state.profile.teacherName; save(); };
+    }
+    $('sideName').textContent = 'أ. ' + (state.profile.teacherName || 'المعلم');
+    $('sideAvatar').textContent = (state.profile.teacherName || 'ع').charAt(0);
+    $('heroName').textContent = 'أ. ' + (state.profile.teacherName || 'المعلم');
+    const startPage = (state.__currentPage && PAGES[state.__currentPage]) ? state.__currentPage : 'home';
+    navigate(startPage); logActivity('تسجيل دخول'); console.log('✅ المرحلة 5 جاهزة');
+  }
+
+  function init() {
+    state = loadState();
+    if (new URLSearchParams(location.search).has('chat')) {
+      initStudentApp();
+      return;
+    }
+    setupLoginUI();
+    if (isSessionValid()) bootApp().catch(e => { console.error(e); $('loginError').textContent = 'خطأ: ' + e.message; });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+</body>
+</html>
